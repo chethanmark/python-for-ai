@@ -1,0 +1,1461 @@
+/* ==========================================================================
+   DESIGN SYSTEM — UTILITIES
+   styles/design-system/utilities.css
+   --------------------------------------------------------------------------
+   Single-purpose utility classes for the Python for AI educational platform.
+   This is the final layer of the design system stack.
+
+   LOAD ORDER:
+     1. variables.css   — design tokens
+     2. reset.css       — browser normalization
+     3. typography.css  — type system and prose
+     4. utilities.css   — YOU ARE HERE
+
+   UTILITY PHILOSOPHY:
+     Every class does exactly one thing. Classes are composable — combine
+     them freely in HTML without side effects. No utility class here sets
+     more than 2–3 related properties (e.g. display + align for flex shorthands).
+     Utilities never use !important unless the comment explains exactly why.
+
+   OWNERSHIP:
+     typography.css owns: .text-*, .font-*, .leading-*, .tracking-*,
+       .truncate, .line-clamp-*, .whitespace-*, .break-*, .uppercase,
+       .lowercase, .capitalize, .underline, .line-through, .no-underline,
+       .prose, .callout, .gradient-text, and all type-related classes.
+     utilities.css owns: everything else — spacing, layout, flex, grid,
+       display, visibility, sizing, borders, shadows, backgrounds,
+       colours, transitions, animations, interactions, and helpers.
+
+   SECTIONS:
+      1.  Container & Layout       — .container-*, .section, .wrapper
+      2.  Display                  — .block, .inline-*, .flex, .grid, .hidden
+      3.  Position                 — .relative, .absolute, .fixed, .sticky, .z-*
+      4.  Flexbox                  — direction, wrap, align, justify, gap, grow
+      5.  Grid                     — .grid-cols-*, .col-span-*, .gap-*, auto layouts
+      6.  Spacing — Margin         — .m-*, .mt-*, .mr-*, .mb-*, .ml-*, .mx-*, .my-*
+      7.  Spacing — Padding        — .p-*, .pt-*, .pr-*, .pb-*, .pl-*, .px-*, .py-*
+      8.  Sizing                   — .w-*, .h-*, .min-*, .max-*, .aspect-*
+      9.  Border & Radius          — .border-*, .rounded-*, .divide-*
+     10.  Shadow                   — .shadow-*, .ring-*
+     11.  Background               — .bg-*, .bg-gradient-*
+     12.  Opacity & Visibility      — .opacity-*, .visible, .invisible, .sr-only-*
+     13.  Overflow                  — .overflow-*, .scroll-*
+     14.  Cursor & Pointer Events   — .cursor-*, .pointer-*, .select-*
+     15.  Transitions & Transforms  — .transition-*, .duration-*, .ease-*, .scale-*, .rotate-*
+     16.  Animations                — @keyframes + .animate-*
+     17.  Interactions & States     — .hover:*, .focus-ring, .interactive
+     18.  Accessibility Helpers     — .focus-trap, .not-sr-only, .reduced-motion
+     19.  Responsive Prefixes        — .sm:*, .md:*, .lg:*, .xl:* (key overrides)
+     20.  Print Utilities            — .print-only, .no-print
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. CONTAINER & LAYOUT
+   --------------------------------------------------------------------------
+   Centred containers with responsive horizontal padding.
+   The .container-* classes mirror the --container-* tokens from variables.css.
+   ========================================================================== */
+
+/* Base container — centred, full width, responsive padding */
+.container {
+  width:       100%;
+  margin-left:  auto;
+  margin-right: auto;
+  padding-left:  var(--container-px-mobile);
+  padding-right: var(--container-px-mobile);
+}
+
+@media (min-width: 640px) {
+  .container { padding-left: var(--container-px-tablet);  padding-right: var(--container-px-tablet);  }
+}
+@media (min-width: 1024px) {
+  .container { padding-left: var(--container-px-desktop); padding-right: var(--container-px-desktop); }
+}
+
+/* Sized containers — constrain max-width for different page types */
+.container-sm  { max-width: var(--container-sm);  margin-left: auto; margin-right: auto; }
+.container-md  { max-width: var(--container-md);  margin-left: auto; margin-right: auto; }
+.container-lg  { max-width: var(--container-lg);  margin-left: auto; margin-right: auto; }
+.container-xl  { max-width: var(--container-xl);  margin-left: auto; margin-right: auto; }
+.container-2xl { max-width: var(--container-2xl); margin-left: auto; margin-right: auto; }
+.container-full { max-width: 100%; }
+
+/* Section — full-width row with vertical padding for major page sections */
+.section {
+  width:          100%;
+  padding-top:    var(--space-16);
+  padding-bottom: var(--space-16);
+}
+
+.section-sm {
+  padding-top:    var(--space-10);
+  padding-bottom: var(--space-10);
+}
+
+.section-lg {
+  padding-top:    var(--space-24);
+  padding-bottom: var(--space-24);
+}
+
+/* Wrapper — combined container + section; the most common page pattern */
+.wrapper {
+  width:          100%;
+  max-width:      var(--container-xl);
+  margin-left:    auto;
+  margin-right:   auto;
+  padding-left:   var(--container-px-mobile);
+  padding-right:  var(--container-px-mobile);
+  padding-top:    var(--space-12);
+  padding-bottom: var(--space-12);
+}
+
+@media (min-width: 640px) {
+  .wrapper { padding-left: var(--container-px-tablet);  padding-right: var(--container-px-tablet); }
+}
+@media (min-width: 1024px) {
+  .wrapper {
+    padding-left:   var(--container-px-desktop);
+    padding-right:  var(--container-px-desktop);
+    padding-top:    var(--space-16);
+    padding-bottom: var(--space-16);
+  }
+}
+
+/* Content column — centred text-width column for article/tutorial pages */
+.content-col {
+  max-width:    var(--prose-max-width);
+  margin-left:  auto;
+  margin-right: auto;
+}
+
+/* Full-bleed — break out of a container to span full viewport width */
+.full-bleed {
+  width:       100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+
+/* ==========================================================================
+   2. DISPLAY
+   ========================================================================== */
+
+.block         { display: block;         }
+.inline-block  { display: inline-block;  }
+.inline        { display: inline;        }
+.inline-flex   { display: inline-flex;   }
+.inline-grid   { display: inline-grid;   }
+.flex          { display: flex;          }
+.grid          { display: grid;          }
+.table         { display: table;         }
+.table-cell    { display: table-cell;    }
+.table-row     { display: table-row;     }
+.contents      { display: contents;      }
+.flow-root     { display: flow-root;     }  /* Contains floats without clearfix hacks */
+
+/* Hidden completely — removed from layout and accessibility tree */
+.hidden        { display: none !important; }
+
+/* Hide visually but keep in layout flow */
+.invisible     { visibility: hidden; }
+.visible       { visibility: visible; }
+
+
+/* ==========================================================================
+   3. POSITION
+   ========================================================================== */
+
+.static   { position: static;   }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed    { position: fixed;    }
+.sticky   { position: sticky;   }
+
+/* Common absolute positioning shorthands */
+.inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+.inset-x-0 { left: 0; right: 0; }
+.inset-y-0 { top: 0; bottom: 0; }
+
+.top-0    { top:    0; }
+.right-0  { right:  0; }
+.bottom-0 { bottom: 0; }
+.left-0   { left:   0; }
+
+.top-auto    { top:    auto; }
+.right-auto  { right:  auto; }
+.bottom-auto { bottom: auto; }
+.left-auto   { left:   auto; }
+
+/* Z-index — mirrors the --z-* tokens */
+.z-below    { z-index: var(--z-below);    }
+.z-base     { z-index: var(--z-base);     }
+.z-raised   { z-index: var(--z-raised);   }
+.z-dropdown { z-index: var(--z-dropdown); }
+.z-sticky   { z-index: var(--z-sticky);   }
+.z-overlay  { z-index: var(--z-overlay);  }
+.z-modal    { z-index: var(--z-modal);    }
+.z-toast    { z-index: var(--z-toast);    }
+.z-tooltip  { z-index: var(--z-tooltip);  }
+
+
+/* ==========================================================================
+   4. FLEXBOX
+   ========================================================================== */
+
+/* --- Direction --- */
+.flex-row         { flex-direction: row;            }
+.flex-row-reverse { flex-direction: row-reverse;    }
+.flex-col         { flex-direction: column;         }
+.flex-col-reverse { flex-direction: column-reverse; }
+
+/* --- Wrap --- */
+.flex-wrap         { flex-wrap: wrap;         }
+.flex-wrap-reverse { flex-wrap: wrap-reverse; }
+.flex-nowrap       { flex-wrap: nowrap;        }
+
+/* --- Align Items (cross axis) --- */
+.items-start    { align-items: flex-start; }
+.items-end      { align-items: flex-end;   }
+.items-center   { align-items: center;     }
+.items-baseline { align-items: baseline;   }
+.items-stretch  { align-items: stretch;    }
+
+/* --- Align Self --- */
+.self-auto    { align-self: auto;       }
+.self-start   { align-self: flex-start; }
+.self-end     { align-self: flex-end;   }
+.self-center  { align-self: center;     }
+.self-stretch { align-self: stretch;    }
+
+/* --- Justify Content (main axis) --- */
+.justify-start    { justify-content: flex-start;    }
+.justify-end      { justify-content: flex-end;      }
+.justify-center   { justify-content: center;        }
+.justify-between  { justify-content: space-between; }
+.justify-around   { justify-content: space-around;  }
+.justify-evenly   { justify-content: space-evenly;  }
+
+/* --- Justify Items --- */
+.justify-items-start  { justify-items: start;  }
+.justify-items-end    { justify-items: end;    }
+.justify-items-center { justify-items: center; }
+
+/* --- Common flex shorthand combos --- */
+.flex-center {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+}
+
+.flex-between {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+}
+
+.flex-start {
+  display:         flex;
+  align-items:     center;
+  justify-content: flex-start;
+}
+
+.flex-end {
+  display:         flex;
+  align-items:     center;
+  justify-content: flex-end;
+}
+
+/* --- Flex Grow / Shrink / Basis --- */
+.flex-1      { flex: 1 1 0%;   }
+.flex-auto   { flex: 1 1 auto; }
+.flex-initial { flex: 0 1 auto; }
+.flex-none   { flex: none;     }
+
+.grow        { flex-grow:   1; }
+.grow-0      { flex-grow:   0; }
+.shrink      { flex-shrink: 1; }
+.shrink-0    { flex-shrink: 0; }
+
+/* --- Gap (flex and grid) --- */
+.gap-0   { gap: 0;                }
+.gap-1   { gap: var(--space-1);   }
+.gap-2   { gap: var(--space-2);   }
+.gap-3   { gap: var(--space-3);   }
+.gap-4   { gap: var(--space-4);   }
+.gap-5   { gap: var(--space-5);   }
+.gap-6   { gap: var(--space-6);   }
+.gap-7   { gap: var(--space-7);   }
+.gap-8   { gap: var(--space-8);   }
+.gap-10  { gap: var(--space-10);  }
+.gap-12  { gap: var(--space-12);  }
+.gap-16  { gap: var(--space-16);  }
+
+.gap-x-0  { column-gap: 0;                }
+.gap-x-2  { column-gap: var(--space-2);   }
+.gap-x-4  { column-gap: var(--space-4);   }
+.gap-x-6  { column-gap: var(--space-6);   }
+.gap-x-8  { column-gap: var(--space-8);   }
+
+.gap-y-0  { row-gap: 0;                }
+.gap-y-2  { row-gap: var(--space-2);   }
+.gap-y-4  { row-gap: var(--space-4);   }
+.gap-y-6  { row-gap: var(--space-6);   }
+.gap-y-8  { row-gap: var(--space-8);   }
+.gap-y-12 { row-gap: var(--space-12);  }
+
+
+/* ==========================================================================
+   5. GRID
+   ========================================================================== */
+
+/* --- Column count templates --- */
+.grid-cols-1  { grid-template-columns: repeat(1,  minmax(0, 1fr)); }
+.grid-cols-2  { grid-template-columns: repeat(2,  minmax(0, 1fr)); }
+.grid-cols-3  { grid-template-columns: repeat(3,  minmax(0, 1fr)); }
+.grid-cols-4  { grid-template-columns: repeat(4,  minmax(0, 1fr)); }
+.grid-cols-6  { grid-template-columns: repeat(6,  minmax(0, 1fr)); }
+.grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+.grid-cols-none { grid-template-columns: none; }
+
+/* --- Column span --- */
+.col-span-1  { grid-column: span 1  / span 1;  }
+.col-span-2  { grid-column: span 2  / span 2;  }
+.col-span-3  { grid-column: span 3  / span 3;  }
+.col-span-4  { grid-column: span 4  / span 4;  }
+.col-span-6  { grid-column: span 6  / span 6;  }
+.col-span-8  { grid-column: span 8  / span 8;  }
+.col-span-12 { grid-column: span 12 / span 12; }
+.col-span-full { grid-column: 1 / -1; }
+
+/* --- Row span --- */
+.row-span-1 { grid-row: span 1 / span 1; }
+.row-span-2 { grid-row: span 2 / span 2; }
+.row-span-3 { grid-row: span 3 / span 3; }
+
+/* --- Auto-fill / auto-fit responsive grids ---
+   Cards grid: as many columns as fit at min 280px */
+.grid-auto-fill {
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+}
+
+/* Wider auto-fill: as many columns as fit at min 320px */
+.grid-auto-fill-lg {
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+}
+
+/* Narrower auto-fill: min 220px — for badge/tag grids */
+.grid-auto-fill-sm {
+  grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
+}
+
+/* --- Grid flow --- */
+.grid-flow-row    { grid-auto-flow: row;    }
+.grid-flow-col    { grid-auto-flow: column; }
+.grid-flow-dense  { grid-auto-flow: dense;  }
+
+/* --- Align (grid items) --- */
+.place-items-center { place-items: center; }
+.place-items-start  { place-items: start;  }
+.place-items-end    { place-items: end;    }
+.place-content-center { place-content: center; }
+
+
+/* ==========================================================================
+   6. SPACING — MARGIN
+   ========================================================================== */
+
+/* --- All sides --- */
+.m-0   { margin: 0;                }
+.m-auto { margin: auto;            }
+.m-1   { margin: var(--space-1);   }
+.m-2   { margin: var(--space-2);   }
+.m-3   { margin: var(--space-3);   }
+.m-4   { margin: var(--space-4);   }
+.m-5   { margin: var(--space-5);   }
+.m-6   { margin: var(--space-6);   }
+.m-8   { margin: var(--space-8);   }
+.m-10  { margin: var(--space-10);  }
+.m-12  { margin: var(--space-12);  }
+
+/* --- Top --- */
+.mt-0   { margin-top: 0;                }
+.mt-auto { margin-top: auto;            }
+.mt-1   { margin-top: var(--space-1);   }
+.mt-2   { margin-top: var(--space-2);   }
+.mt-3   { margin-top: var(--space-3);   }
+.mt-4   { margin-top: var(--space-4);   }
+.mt-5   { margin-top: var(--space-5);   }
+.mt-6   { margin-top: var(--space-6);   }
+.mt-7   { margin-top: var(--space-7);   }
+.mt-8   { margin-top: var(--space-8);   }
+.mt-10  { margin-top: var(--space-10);  }
+.mt-12  { margin-top: var(--space-12);  }
+.mt-14  { margin-top: var(--space-14);  }
+.mt-16  { margin-top: var(--space-16);  }
+.mt-20  { margin-top: var(--space-20);  }
+.mt-24  { margin-top: var(--space-24);  }
+
+/* --- Bottom --- */
+.mb-0   { margin-bottom: 0;                }
+.mb-auto { margin-bottom: auto;            }
+.mb-1   { margin-bottom: var(--space-1);   }
+.mb-2   { margin-bottom: var(--space-2);   }
+.mb-3   { margin-bottom: var(--space-3);   }
+.mb-4   { margin-bottom: var(--space-4);   }
+.mb-5   { margin-bottom: var(--space-5);   }
+.mb-6   { margin-bottom: var(--space-6);   }
+.mb-7   { margin-bottom: var(--space-7);   }
+.mb-8   { margin-bottom: var(--space-8);   }
+.mb-10  { margin-bottom: var(--space-10);  }
+.mb-12  { margin-bottom: var(--space-12);  }
+.mb-16  { margin-bottom: var(--space-16);  }
+.mb-20  { margin-bottom: var(--space-20);  }
+
+/* --- Left --- */
+.ml-0    { margin-left: 0;                }
+.ml-auto { margin-left: auto;             }
+.ml-1    { margin-left: var(--space-1);   }
+.ml-2    { margin-left: var(--space-2);   }
+.ml-3    { margin-left: var(--space-3);   }
+.ml-4    { margin-left: var(--space-4);   }
+.ml-6    { margin-left: var(--space-6);   }
+.ml-8    { margin-left: var(--space-8);   }
+
+/* --- Right --- */
+.mr-0    { margin-right: 0;                }
+.mr-auto { margin-right: auto;             }
+.mr-1    { margin-right: var(--space-1);   }
+.mr-2    { margin-right: var(--space-2);   }
+.mr-3    { margin-right: var(--space-3);   }
+.mr-4    { margin-right: var(--space-4);   }
+.mr-6    { margin-right: var(--space-6);   }
+.mr-8    { margin-right: var(--space-8);   }
+
+/* --- Horizontal (left + right) --- */
+.mx-0    { margin-left: 0;    margin-right: 0;    }
+.mx-auto { margin-left: auto; margin-right: auto;  }
+.mx-1    { margin-left: var(--space-1);  margin-right: var(--space-1);  }
+.mx-2    { margin-left: var(--space-2);  margin-right: var(--space-2);  }
+.mx-3    { margin-left: var(--space-3);  margin-right: var(--space-3);  }
+.mx-4    { margin-left: var(--space-4);  margin-right: var(--space-4);  }
+.mx-6    { margin-left: var(--space-6);  margin-right: var(--space-6);  }
+.mx-8    { margin-left: var(--space-8);  margin-right: var(--space-8);  }
+
+/* --- Vertical (top + bottom) --- */
+.my-0   { margin-top: 0;                 margin-bottom: 0;                }
+.my-1   { margin-top: var(--space-1);    margin-bottom: var(--space-1);   }
+.my-2   { margin-top: var(--space-2);    margin-bottom: var(--space-2);   }
+.my-3   { margin-top: var(--space-3);    margin-bottom: var(--space-3);   }
+.my-4   { margin-top: var(--space-4);    margin-bottom: var(--space-4);   }
+.my-6   { margin-top: var(--space-6);    margin-bottom: var(--space-6);   }
+.my-8   { margin-top: var(--space-8);    margin-bottom: var(--space-8);   }
+.my-10  { margin-top: var(--space-10);   margin-bottom: var(--space-10);  }
+.my-12  { margin-top: var(--space-12);   margin-bottom: var(--space-12);  }
+.my-16  { margin-top: var(--space-16);   margin-bottom: var(--space-16);  }
+
+
+/* ==========================================================================
+   7. SPACING — PADDING
+   ========================================================================== */
+
+/* --- All sides --- */
+.p-0   { padding: 0;                }
+.p-1   { padding: var(--space-1);   }
+.p-2   { padding: var(--space-2);   }
+.p-3   { padding: var(--space-3);   }
+.p-4   { padding: var(--space-4);   }
+.p-5   { padding: var(--space-5);   }
+.p-6   { padding: var(--space-6);   }
+.p-7   { padding: var(--space-7);   }
+.p-8   { padding: var(--space-8);   }
+.p-10  { padding: var(--space-10);  }
+.p-12  { padding: var(--space-12);  }
+.p-16  { padding: var(--space-16);  }
+
+/* --- Top --- */
+.pt-0   { padding-top: 0;                }
+.pt-1   { padding-top: var(--space-1);   }
+.pt-2   { padding-top: var(--space-2);   }
+.pt-3   { padding-top: var(--space-3);   }
+.pt-4   { padding-top: var(--space-4);   }
+.pt-5   { padding-top: var(--space-5);   }
+.pt-6   { padding-top: var(--space-6);   }
+.pt-8   { padding-top: var(--space-8);   }
+.pt-10  { padding-top: var(--space-10);  }
+.pt-12  { padding-top: var(--space-12);  }
+.pt-16  { padding-top: var(--space-16);  }
+.pt-20  { padding-top: var(--space-20);  }
+
+/* --- Bottom --- */
+.pb-0   { padding-bottom: 0;                }
+.pb-1   { padding-bottom: var(--space-1);   }
+.pb-2   { padding-bottom: var(--space-2);   }
+.pb-3   { padding-bottom: var(--space-3);   }
+.pb-4   { padding-bottom: var(--space-4);   }
+.pb-5   { padding-bottom: var(--space-5);   }
+.pb-6   { padding-bottom: var(--space-6);   }
+.pb-8   { padding-bottom: var(--space-8);   }
+.pb-10  { padding-bottom: var(--space-10);  }
+.pb-12  { padding-bottom: var(--space-12);  }
+.pb-16  { padding-bottom: var(--space-16);  }
+.pb-20  { padding-bottom: var(--space-20);  }
+
+/* --- Left --- */
+.pl-0   { padding-left: 0;                }
+.pl-1   { padding-left: var(--space-1);   }
+.pl-2   { padding-left: var(--space-2);   }
+.pl-3   { padding-left: var(--space-3);   }
+.pl-4   { padding-left: var(--space-4);   }
+.pl-5   { padding-left: var(--space-5);   }
+.pl-6   { padding-left: var(--space-6);   }
+.pl-8   { padding-left: var(--space-8);   }
+
+/* --- Right --- */
+.pr-0   { padding-right: 0;                }
+.pr-1   { padding-right: var(--space-1);   }
+.pr-2   { padding-right: var(--space-2);   }
+.pr-3   { padding-right: var(--space-3);   }
+.pr-4   { padding-right: var(--space-4);   }
+.pr-5   { padding-right: var(--space-5);   }
+.pr-6   { padding-right: var(--space-6);   }
+.pr-8   { padding-right: var(--space-8);   }
+
+/* --- Horizontal (left + right) --- */
+.px-0   { padding-left: 0;                padding-right: 0;                }
+.px-1   { padding-left: var(--space-1);   padding-right: var(--space-1);   }
+.px-2   { padding-left: var(--space-2);   padding-right: var(--space-2);   }
+.px-3   { padding-left: var(--space-3);   padding-right: var(--space-3);   }
+.px-4   { padding-left: var(--space-4);   padding-right: var(--space-4);   }
+.px-5   { padding-left: var(--space-5);   padding-right: var(--space-5);   }
+.px-6   { padding-left: var(--space-6);   padding-right: var(--space-6);   }
+.px-7   { padding-left: var(--space-7);   padding-right: var(--space-7);   }
+.px-8   { padding-left: var(--space-8);   padding-right: var(--space-8);   }
+.px-10  { padding-left: var(--space-10);  padding-right: var(--space-10);  }
+.px-12  { padding-left: var(--space-12);  padding-right: var(--space-12);  }
+
+/* --- Vertical (top + bottom) --- */
+.py-0   { padding-top: 0;                padding-bottom: 0;                }
+.py-1   { padding-top: var(--space-1);   padding-bottom: var(--space-1);   }
+.py-2   { padding-top: var(--space-2);   padding-bottom: var(--space-2);   }
+.py-3   { padding-top: var(--space-3);   padding-bottom: var(--space-3);   }
+.py-4   { padding-top: var(--space-4);   padding-bottom: var(--space-4);   }
+.py-5   { padding-top: var(--space-5);   padding-bottom: var(--space-5);   }
+.py-6   { padding-top: var(--space-6);   padding-bottom: var(--space-6);   }
+.py-7   { padding-top: var(--space-7);   padding-bottom: var(--space-7);   }
+.py-8   { padding-top: var(--space-8);   padding-bottom: var(--space-8);   }
+.py-10  { padding-top: var(--space-10);  padding-bottom: var(--space-10);  }
+.py-12  { padding-top: var(--space-12);  padding-bottom: var(--space-12);  }
+.py-16  { padding-top: var(--space-16);  padding-bottom: var(--space-16);  }
+.py-20  { padding-top: var(--space-20);  padding-bottom: var(--space-20);  }
+
+
+/* ==========================================================================
+   8. SIZING
+   ========================================================================== */
+
+/* --- Width --- */
+.w-0     { width: 0;        }
+.w-auto  { width: auto;     }
+.w-full  { width: 100%;     }
+.w-screen { width: 100vw;   }
+.w-min   { width: min-content; }
+.w-max   { width: max-content; }
+.w-fit   { width: fit-content; }
+
+.w-1-2   { width: 50%;      }
+.w-1-3   { width: 33.333%;  }
+.w-2-3   { width: 66.667%;  }
+.w-1-4   { width: 25%;      }
+.w-3-4   { width: 75%;      }
+.w-1-5   { width: 20%;      }
+.w-4-5   { width: 80%;      }
+
+/* --- Height --- */
+.h-0     { height: 0;        }
+.h-auto  { height: auto;     }
+.h-full  { height: 100%;     }
+.h-screen { height: 100vh;   }
+.h-svh   { height: 100svh;   }  /* Small viewport height — avoids iOS bar jump */
+.h-dvh   { height: 100dvh;   }  /* Dynamic viewport height */
+.h-min   { height: min-content; }
+.h-max   { height: max-content; }
+.h-fit   { height: fit-content; }
+
+/* Named size steps — match spacing token steps */
+.h-4   { height: var(--space-4);  }
+.h-5   { height: var(--space-5);  }
+.h-6   { height: var(--space-6);  }
+.h-7   { height: var(--space-7);  }
+.h-8   { height: var(--space-8);  }
+.h-10  { height: var(--space-10); }
+.h-12  { height: var(--space-12); }
+.h-14  { height: var(--space-14); }
+.h-16  { height: var(--space-16); }
+
+.w-4   { width: var(--space-4);  }
+.w-5   { width: var(--space-5);  }
+.w-6   { width: var(--space-6);  }
+.w-7   { width: var(--space-7);  }
+.w-8   { width: var(--space-8);  }
+.w-10  { width: var(--space-10); }
+.w-12  { width: var(--space-12); }
+.w-14  { width: var(--space-14); }
+.w-16  { width: var(--space-16); }
+
+/* --- Min / Max Width --- */
+.min-w-0      { min-width: 0;          }
+.min-w-full   { min-width: 100%;       }
+.min-w-min    { min-width: min-content; }
+.min-w-max    { min-width: max-content; }
+.max-w-none   { max-width: none;       }
+.max-w-full   { max-width: 100%;       }
+.max-w-prose  { max-width: var(--prose-max-width); }
+.max-w-sm     { max-width: var(--container-sm);    }
+.max-w-md     { max-width: var(--container-md);    }
+.max-w-lg     { max-width: var(--container-lg);    }
+.max-w-xl     { max-width: var(--container-xl);    }
+.max-w-2xl    { max-width: var(--container-2xl);   }
+
+/* --- Min / Max Height --- */
+.min-h-0      { min-height: 0;    }
+.min-h-full   { min-height: 100%; }
+.min-h-screen { min-height: 100vh; }
+.max-h-full   { max-height: 100%; }
+.max-h-screen { max-height: 100vh; }
+
+/* --- Aspect Ratio --- */
+.aspect-square { aspect-ratio: 1 / 1;   }
+.aspect-video  { aspect-ratio: 16 / 9;  }
+.aspect-4-3    { aspect-ratio: 4 / 3;   }
+.aspect-3-2    { aspect-ratio: 3 / 2;   }
+.aspect-auto   { aspect-ratio: auto;    }
+
+/* --- Object Fit (for img / video inside a sized container) --- */
+.object-contain  { object-fit: contain;  }
+.object-cover    { object-fit: cover;    }
+.object-fill     { object-fit: fill;     }
+.object-none     { object-fit: none;     }
+.object-center   { object-position: center; }
+.object-top      { object-position: top;    }
+
+
+/* ==========================================================================
+   9. BORDER & RADIUS
+   ========================================================================== */
+
+/* --- Border width --- */
+.border-0  { border-width: 0;                  }
+.border    { border: 1px solid var(--color-border-default); }
+.border-2  { border: 2px solid var(--color-border-default); }
+.border-t  { border-top:    1px solid var(--color-border-default); }
+.border-b  { border-bottom: 1px solid var(--color-border-default); }
+.border-l  { border-left:   1px solid var(--color-border-default); }
+.border-r  { border-right:  1px solid var(--color-border-default); }
+
+/* --- Border color variants --- */
+.border-subtle   { border-color: var(--color-border-subtle);   }
+.border-default  { border-color: var(--color-border-default);  }
+.border-emphasis { border-color: var(--color-border-emphasis); }
+.border-primary  { border-color: var(--color-primary-border);  }
+.border-accent   { border-color: var(--color-accent-border);   }
+.border-success  { border-color: var(--color-success-border);  }
+.border-warning  { border-color: var(--color-warning-border);  }
+.border-danger   { border-color: var(--color-danger-border);   }
+.border-focus    { border-color: var(--color-border-focus);    }
+
+/* --- Border style --- */
+.border-solid  { border-style: solid;  }
+.border-dashed { border-style: dashed; }
+.border-dotted { border-style: dotted; }
+.border-none   { border-style: none;   }
+
+/* --- Border radius --- */
+.rounded-none { border-radius: var(--radius-none); }
+.rounded-sm   { border-radius: var(--radius-sm);   }
+.rounded      { border-radius: var(--radius-md);   }
+.rounded-md   { border-radius: var(--radius-md);   }
+.rounded-lg   { border-radius: var(--radius-lg);   }
+.rounded-xl   { border-radius: var(--radius-xl);   }
+.rounded-2xl  { border-radius: var(--radius-2xl);  }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* Partial rounding (useful for tab-like shapes) */
+.rounded-t-none { border-top-left-radius: 0;                  border-top-right-radius: 0;                 }
+.rounded-t      { border-top-left-radius: var(--radius-md);   border-top-right-radius: var(--radius-md);  }
+.rounded-t-lg   { border-top-left-radius: var(--radius-lg);   border-top-right-radius: var(--radius-lg);  }
+.rounded-b-none { border-bottom-left-radius: 0;               border-bottom-right-radius: 0;              }
+.rounded-b      { border-bottom-left-radius: var(--radius-md); border-bottom-right-radius: var(--radius-md); }
+.rounded-b-lg   { border-bottom-left-radius: var(--radius-lg); border-bottom-right-radius: var(--radius-lg); }
+.rounded-l-none { border-top-left-radius: 0;                  border-bottom-left-radius: 0;               }
+.rounded-l      { border-top-left-radius: var(--radius-md);   border-bottom-left-radius: var(--radius-md); }
+.rounded-r-none { border-top-right-radius: 0;                 border-bottom-right-radius: 0;              }
+.rounded-r      { border-top-right-radius: var(--radius-md);  border-bottom-right-radius: var(--radius-md); }
+
+/* --- Divide (borders between children using gap-aware approach) --- */
+.divide-y > * + * { border-top:    1px solid var(--color-border-default); }
+.divide-x > * + * { border-left:   1px solid var(--color-border-default); }
+.divide-subtle > * + * { border-color: var(--color-border-subtle); }
+
+
+/* ==========================================================================
+   10. SHADOW & RING
+   ========================================================================== */
+
+.shadow-none { box-shadow: none;              }
+.shadow-xs   { box-shadow: var(--shadow-xs);  }
+.shadow-sm   { box-shadow: var(--shadow-sm);  }
+.shadow      { box-shadow: var(--shadow-md);  }
+.shadow-md   { box-shadow: var(--shadow-md);  }
+.shadow-lg   { box-shadow: var(--shadow-lg);  }
+.shadow-xl   { box-shadow: var(--shadow-xl);  }
+.shadow-2xl  { box-shadow: var(--shadow-2xl); }
+.shadow-inset { box-shadow: var(--shadow-inset); }
+
+/* Hover shadow lift — add to any card or interactive element */
+.shadow-hover {
+  transition: box-shadow var(--duration-normal) var(--ease-out);
+}
+.shadow-hover:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* --- Focus ring --- */
+.ring         { box-shadow: var(--shadow-focus);        }
+.ring-danger  { box-shadow: var(--shadow-focus-danger); }
+
+
+/* ==========================================================================
+   11. BACKGROUND
+   ========================================================================== */
+
+/* --- Semantic background colours --- */
+.bg-base      { background-color: var(--color-bg-base);    }
+.bg-subtle    { background-color: var(--color-bg-subtle);  }
+.bg-muted     { background-color: var(--color-bg-muted);   }
+.bg-emphasis  { background-color: var(--color-bg-emphasis);}
+.bg-inverse   { background-color: var(--color-bg-inverse); }
+.bg-overlay   { background-color: var(--color-bg-overlay); }
+.bg-code      { background-color: var(--color-bg-code);    }
+.bg-transparent { background-color: transparent;           }
+
+/* --- Brand backgrounds --- */
+.bg-primary         { background-color: var(--color-primary);        }
+.bg-primary-subtle  { background-color: var(--color-primary-subtle);  }
+.bg-accent          { background-color: var(--color-accent);          }
+.bg-accent-subtle   { background-color: var(--color-accent-subtle);   }
+
+/* --- Status backgrounds --- */
+.bg-success         { background-color: var(--color-success);         }
+.bg-success-subtle  { background-color: var(--color-success-subtle);  }
+.bg-warning         { background-color: var(--color-warning);         }
+.bg-warning-subtle  { background-color: var(--color-warning-subtle);  }
+.bg-danger          { background-color: var(--color-danger);          }
+.bg-danger-subtle   { background-color: var(--color-danger-subtle);   }
+
+/* --- Gradient backgrounds --- */
+.bg-gradient-brand {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-accent)  100%
+  );
+}
+
+.bg-gradient-brand-subtle {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-subtle) 0%,
+    var(--color-accent-subtle)  100%
+  );
+}
+
+.bg-gradient-dark {
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-inverse) 0%,
+    var(--primitive-slate-800) 100%
+  );
+}
+
+.bg-gradient-success {
+  background: linear-gradient(
+    135deg,
+    var(--color-success-subtle) 0%,
+    var(--color-primary-subtle) 100%
+  );
+}
+
+/* --- Background size and position --- */
+.bg-cover   { background-size:     cover;   }
+.bg-contain { background-size:     contain; }
+.bg-center  { background-position: center;  }
+.bg-top     { background-position: top;     }
+.bg-bottom  { background-position: bottom;  }
+.bg-no-repeat { background-repeat: no-repeat; }
+
+
+/* ==========================================================================
+   12. OPACITY & VISIBILITY
+   ========================================================================== */
+
+.opacity-0   { opacity: 0;    }
+.opacity-5   { opacity: 0.05; }
+.opacity-10  { opacity: 0.10; }
+.opacity-20  { opacity: 0.20; }
+.opacity-25  { opacity: 0.25; }
+.opacity-50  { opacity: 0.50; }
+.opacity-75  { opacity: 0.75; }
+.opacity-90  { opacity: 0.90; }
+.opacity-95  { opacity: 0.95; }
+.opacity-100 { opacity: 1;    }
+
+/* Disabled visual state — does not remove pointer events (use .pointer-none for that) */
+.opacity-disabled { opacity: 0.5; }
+
+
+/* ==========================================================================
+   13. OVERFLOW
+   ========================================================================== */
+
+.overflow-auto    { overflow:   auto;    }
+.overflow-hidden  { overflow:   hidden;  }
+.overflow-visible { overflow:   visible; }
+.overflow-scroll  { overflow:   scroll;  }
+.overflow-x-auto  { overflow-x: auto;   }
+.overflow-x-hidden { overflow-x: hidden; }
+.overflow-y-auto  { overflow-y: auto;   }
+.overflow-y-hidden { overflow-y: hidden; }
+.overflow-y-scroll { overflow-y: scroll; }
+
+/* Table overflow wrapper — horizontal scroll on narrow screens */
+.table-wrapper {
+  width:      100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* --- Scroll behaviour --- */
+.scroll-smooth { scroll-behavior: smooth; }
+.scroll-auto   { scroll-behavior: auto;   }
+
+/* --- Scroll snap --- */
+.snap-x         { scroll-snap-type: x mandatory; }
+.snap-y         { scroll-snap-type: y mandatory; }
+.snap-start     { scroll-snap-align: start; }
+.snap-center    { scroll-snap-align: center; }
+.snap-mandatory { scroll-snap-type: x mandatory; }
+
+
+/* ==========================================================================
+   14. CURSOR & POINTER EVENTS
+   ========================================================================== */
+
+.cursor-auto      { cursor: auto;      }
+.cursor-default   { cursor: default;   }
+.cursor-pointer   { cursor: pointer;   }
+.cursor-wait      { cursor: wait;      }
+.cursor-text      { cursor: text;      }
+.cursor-move      { cursor: move;      }
+.cursor-help      { cursor: help;      }
+.cursor-not-allowed { cursor: not-allowed; }
+.cursor-grab      { cursor: grab;      }
+.cursor-grabbing  { cursor: grabbing;  }
+.cursor-crosshair { cursor: crosshair; }
+
+.pointer-none     { pointer-events: none;  }
+.pointer-auto     { pointer-events: auto;  }
+
+.select-none      { user-select: none;  -webkit-user-select: none; }
+.select-text      { user-select: text;  }
+.select-all       { user-select: all;   }
+.select-auto      { user-select: auto;  }
+
+
+/* ==========================================================================
+   15. TRANSITIONS & TRANSFORMS
+   ========================================================================== */
+
+/* --- Transition presets --- */
+.transition         { transition: var(--transition-base);      }
+.transition-color   { transition: var(--transition-color);     }
+.transition-shadow  { transition: var(--transition-shadow);    }
+.transition-opacity { transition: var(--transition-opacity);   }
+.transition-transform { transition: var(--transition-transform); }
+.transition-none    { transition: none; }
+
+/* --- Duration overrides --- */
+.duration-instant { transition-duration: var(--duration-instant); }
+.duration-fast    { transition-duration: var(--duration-fast);    }
+.duration-normal  { transition-duration: var(--duration-normal);  }
+.duration-slow    { transition-duration: var(--duration-slow);    }
+.duration-slower  { transition-duration: var(--duration-slower);  }
+
+/* --- Easing overrides --- */
+.ease-linear  { transition-timing-function: var(--ease-linear);  }
+.ease-in      { transition-timing-function: var(--ease-in);      }
+.ease-out     { transition-timing-function: var(--ease-out);     }
+.ease-in-out  { transition-timing-function: var(--ease-in-out);  }
+.ease-bounce  { transition-timing-function: var(--ease-bounce);  }
+
+/* --- Scale --- */
+.scale-90  { transform: scale(0.90); }
+.scale-95  { transform: scale(0.95); }
+.scale-100 { transform: scale(1.00); }
+.scale-105 { transform: scale(1.05); }
+.scale-110 { transform: scale(1.10); }
+
+/* --- Translate --- */
+.translate-y-0  { transform: translateY(0);     }
+.translate-y-1  { transform: translateY(-4px);  }
+.translate-y-2  { transform: translateY(-8px);  }
+.-translate-y-1 { transform: translateY(4px);   }
+
+/* --- Rotate --- */
+.rotate-0   { transform: rotate(0deg);   }
+.rotate-45  { transform: rotate(45deg);  }
+.rotate-90  { transform: rotate(90deg);  }
+.rotate-180 { transform: rotate(180deg); }
+.-rotate-45 { transform: rotate(-45deg); }
+.-rotate-90 { transform: rotate(-90deg); }
+
+/* --- Transform origin --- */
+.origin-center { transform-origin: center;       }
+.origin-top    { transform-origin: top center;   }
+.origin-bottom { transform-origin: bottom center; }
+.origin-left   { transform-origin: left center;  }
+.origin-right  { transform-origin: right center; }
+
+/* --- Hover lift (common interactive card pattern) --- */
+.lift {
+  transition: transform var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out);
+}
+.lift:hover {
+  transform:  translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.lift:active {
+  transform:  translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+
+/* ==========================================================================
+   16. ANIMATIONS
+   --------------------------------------------------------------------------
+   @keyframes definitions + .animate-* classes.
+   All animations respect prefers-reduced-motion via the global rule
+   in reset.css (duration collapses to 0.01ms for motion-sensitive users).
+   ========================================================================== */
+
+/* --- Fade In --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--duration-normal) var(--ease-out) both;
+}
+
+/* --- Fade In Up (used for staggered card grids, hero content) --- */
+@keyframes fadeInUp {
+  from {
+    opacity:   0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity:   1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp var(--duration-slow) var(--ease-out) both;
+}
+
+/* --- Fade In Down (used for dropdowns, tooltips) --- */
+@keyframes fadeInDown {
+  from {
+    opacity:   0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity:   1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown var(--duration-normal) var(--ease-out) both;
+}
+
+/* --- Fade Out --- */
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+.animate-fade-out {
+  animation: fadeOut var(--duration-normal) var(--ease-in) both;
+}
+
+/* --- Scale In (modal / popover entrance) --- */
+@keyframes scaleIn {
+  from {
+    opacity:   0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity:   1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--duration-normal) var(--ease-bounce) both;
+}
+
+/* --- Slide In Left (sidebar, drawer) --- */
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0);     }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft var(--duration-slow) var(--ease-out) both;
+}
+
+/* --- Slide In Right --- */
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0);    }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight var(--duration-slow) var(--ease-out) both;
+}
+
+/* --- Slide Up (mobile menu, bottom sheet) --- */
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0);    }
+}
+
+.animate-slide-up {
+  animation: slideUp var(--duration-slow) var(--ease-out) both;
+}
+
+/* --- Pulse (loading states, skeleton screens) --- */
+@keyframes pulse {
+  0%, 100% { opacity: 1;    }
+  50%       { opacity: 0.4; }
+}
+
+.animate-pulse {
+  animation: pulse 2s var(--ease-in-out) infinite;
+}
+
+/* --- Spin (loading spinner) --- */
+@keyframes spin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 0.8s var(--ease-linear) infinite;
+}
+
+/* --- Bounce (attention-drawing indicator, notification dot) --- */
+@keyframes bounce {
+  0%, 100% {
+    transform:                translateY(0);
+    animation-timing-function: var(--ease-in);
+  }
+  50% {
+    transform:                translateY(-8px);
+    animation-timing-function: var(--ease-out);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+/* --- Shimmer (skeleton loading — for tutorial card placeholders) --- */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-muted)    25%,
+    var(--color-bg-emphasis) 50%,
+    var(--color-bg-muted)    75%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+/* Skeleton variants */
+.skeleton-text {
+  height:        1em;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-text-sm { height: 0.75em; }
+.skeleton-text-lg { height: 1.25em; }
+.skeleton-avatar  { border-radius: var(--radius-full); }
+
+/* --- Progress bar fill animation (used by progress-tracker.js) --- */
+@keyframes progressFill {
+  from { width: 0%; }
+  to   { width: var(--progress-value, 100%); }
+}
+
+.animate-progress {
+  animation: progressFill var(--duration-slower) var(--ease-out) both;
+}
+
+/* --- Staggered animation delays (for card grids) --- */
+.delay-75   { animation-delay:  75ms; }
+.delay-100  { animation-delay: 100ms; }
+.delay-150  { animation-delay: 150ms; }
+.delay-200  { animation-delay: 200ms; }
+.delay-300  { animation-delay: 300ms; }
+.delay-400  { animation-delay: 400ms; }
+.delay-500  { animation-delay: 500ms; }
+.delay-700  { animation-delay: 700ms; }
+
+
+/* ==========================================================================
+   17. INTERACTIONS & STATES
+   ========================================================================== */
+
+/* --- Interactive base ---
+   Apply to any element that should behave like a button without being one.
+   Combines the minimum affordances: pointer, tap highlight removal, no text select. */
+.interactive {
+  cursor:                    pointer;
+  user-select:               none;
+  -webkit-user-select:       none;
+  -webkit-tap-highlight-color: transparent;
+  transition:                var(--transition-color);
+}
+
+/* --- Hover colour shift --- */
+.hover-bg-subtle:hover   { background-color: var(--color-bg-subtle);  }
+.hover-bg-muted:hover    { background-color: var(--color-bg-muted);   }
+.hover-bg-emphasis:hover { background-color: var(--color-bg-emphasis);}
+.hover-primary:hover     { background-color: var(--color-primary);    color: var(--color-text-inverse); }
+.hover-text-primary:hover { color: var(--color-text-primary);         }
+.hover-text-accent:hover  { color: var(--color-accent);               }
+
+/* --- Active press state --- */
+.active-press:active {
+  transform: scale(0.98);
+}
+
+/* --- Focus ring utility ---
+   Applied directly in HTML when the global :focus-visible isn't sufficient. */
+.focus-ring:focus-visible {
+  outline:        2px solid var(--color-border-focus);
+  outline-offset: 3px;
+  box-shadow:     var(--shadow-focus);
+}
+
+.focus-ring-inset:focus-visible {
+  outline:        2px solid var(--color-border-focus);
+  outline-offset: -2px;
+  box-shadow:     none;
+}
+
+/* --- Disabled composite state --- */
+.disabled,
+[data-disabled="true"] {
+  opacity:        0.5;
+  cursor:         not-allowed;
+  pointer-events: none;
+}
+
+/* --- Loading state --- */
+[data-loading="true"] {
+  cursor:         wait;
+  pointer-events: none;
+}
+
+/* --- Group hover — parent triggers child state ---
+   Add .group to parent; use .group-hover:* on child in JavaScript
+   by toggling a class, or use CSS :has() where supported. */
+.group { position: relative; }
+
+
+/* ==========================================================================
+   18. ACCESSIBILITY HELPERS
+   --------------------------------------------------------------------------
+   Complements the base accessibility classes defined in reset.css.
+   These extend, not duplicate, that foundation.
+   ========================================================================== */
+
+/* --- Focus trap container ---
+   Applied by JavaScript when a modal or dialog is open. Signals to
+   assistive technology that focus is constrained to this element. */
+.focus-trap {
+  outline: none;  /* The children handle focus indicators, not the trap itself */
+}
+
+/* --- Not screen-reader only --- reverses .sr-only from reset.css --- */
+.not-sr-only {
+  position:   static;
+  width:      auto;
+  height:     auto;
+  padding:    0;
+  margin:     0;
+  overflow:   visible;
+  clip:       auto;
+  clip-path:  none;
+  white-space: normal;
+}
+
+/* --- ARIA live region helpers ---
+   Applied to elements that receive dynamic content updates
+   (quiz results, code output, progress updates). */
+.live-region {
+  position:   absolute;
+  width:      1px;
+  height:     1px;
+  overflow:   hidden;
+  clip:       rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* --- Reduced motion explicit opt-out ---
+   For elements where animation is meaningful and the user has
+   signalled preference via explicit interaction (e.g., enabling
+   an animation toggle in settings — future feature). */
+.motion-safe {
+  /* Will only apply transition/animation when the block content
+     is reached; prefers-reduced-motion in reset.css collapses durations. */
+  transition: var(--transition-base);
+}
+
+/* --- High contrast mode utility ---
+   Force visible borders in Windows High Contrast / Forced Colors mode. */
+@media (forced-colors: active) {
+  .forced-border {
+    border: 1px solid ButtonText !important;
+  }
+
+  .forced-bg {
+    background-color: ButtonFace !important;
+    color:            ButtonText !important;
+  }
+}
+
+/* --- Touch target enlarger ---
+   Increases the tap target of small elements (icon buttons, checkboxes)
+   without changing their visual size. The ::after creates an invisible
+   hit area of at least 44×44px. WCAG 2.5.5 Success Criterion. */
+.touch-target {
+  position: relative;
+}
+
+.touch-target::after {
+  content:  "";
+  position: absolute;
+  inset:    50% auto auto 50%;
+  width:    max(100%, 44px);
+  height:   max(100%, 44px);
+  transform: translate(-50%, -50%);
+}
+
+
+/* ==========================================================================
+   19. RESPONSIVE UTILITY PREFIXES
+   --------------------------------------------------------------------------
+   Breakpoint-prefixed versions of the most commonly overridden utilities.
+   Mobile-first: base applies at all sizes; prefixed versions override
+   at the stated minimum width.
+
+   Breakpoints:
+     sm:  640px   md:  768px   lg:  1024px   xl: 1280px
+   ========================================================================== */
+
+/* --- sm: (640px+) --- */
+@media (min-width: 640px) {
+  .sm\:hidden         { display: none;         }
+  .sm\:block          { display: block;        }
+  .sm\:flex           { display: flex;         }
+  .sm\:grid           { display: grid;         }
+  .sm\:inline-flex    { display: inline-flex;  }
+
+  .sm\:flex-row       { flex-direction: row;   }
+  .sm\:flex-col       { flex-direction: column; }
+  .sm\:flex-wrap      { flex-wrap: wrap;       }
+  .sm\:flex-nowrap    { flex-wrap: nowrap;     }
+  .sm\:items-center   { align-items: center;   }
+  .sm\:justify-center { justify-content: center; }
+  .sm\:justify-between { justify-content: space-between; }
+
+  .sm\:grid-cols-1    { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+  .sm\:grid-cols-2    { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sm\:grid-cols-3    { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  .sm\:gap-4          { gap: var(--space-4); }
+  .sm\:gap-6          { gap: var(--space-6); }
+  .sm\:gap-8          { gap: var(--space-8); }
+
+  .sm\:p-6            { padding: var(--space-6); }
+  .sm\:p-8            { padding: var(--space-8); }
+  .sm\:px-6           { padding-left: var(--space-6);  padding-right: var(--space-6);  }
+  .sm\:py-8           { padding-top:  var(--space-8);  padding-bottom: var(--space-8); }
+  .sm\:py-12          { padding-top:  var(--space-12); padding-bottom: var(--space-12);}
+
+  .sm\:w-auto         { width: auto;   }
+  .sm\:w-full         { width: 100%;   }
+  .sm\:w-1-2          { width: 50%;    }
+
+  .sm\:mt-0           { margin-top:    0; }
+  .sm\:mb-0           { margin-bottom: 0; }
+  .sm\:mx-auto        { margin-left: auto; margin-right: auto; }
+
+  .sm\:text-center    { text-align: center; }
+  .sm\:text-left      { text-align: left;   }
+}
+
+/* --- md: (768px+) --- */
+@media (min-width: 768px) {
+  .md\:hidden         { display: none;         }
+  .md\:block          { display: block;        }
+  .md\:flex           { display: flex;         }
+  .md\:grid           { display: grid;         }
+  .md\:inline-flex    { display: inline-flex;  }
+
+  .md\:flex-row       { flex-direction: row;   }
+  .md\:flex-col       { flex-direction: column; }
+  .md\:items-center   { align-items: center;   }
+  .md\:items-start    { align-items: flex-start; }
+  .md\:justify-between { justify-content: space-between; }
+
+  .md\:grid-cols-2    { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md\:grid-cols-3    { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .md\:grid-cols-4    { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+  .md\:gap-4          { gap: var(--space-4);  }
+  .md\:gap-6          { gap: var(--space-6);  }
+  .md\:gap-8          { gap: var(--space-8);  }
+  .md\:gap-12         { gap: var(--space-12); }
+
+  .md\:p-8            { padding:  var(--space-8);  }
+  .md\:p-10           { padding:  var(--space-10); }
+  .md\:px-8           { padding-left: var(--space-8);   padding-right: var(--space-8);  }
+  .md\:py-12          { padding-top:  var(--space-12);  padding-bottom: var(--space-12);}
+  .md\:py-16          { padding-top:  var(--space-16);  padding-bottom: var(--space-16);}
+
+  .md\:w-auto         { width: auto; }
+  .md\:w-full         { width: 100%; }
+  .md\:w-1-2          { width: 50%;  }
+  .md\:w-1-3          { width: 33.333%; }
+  .md\:w-2-3          { width: 66.667%; }
+
+  .md\:mt-0           { margin-top:    0; }
+  .md\:mb-0           { margin-bottom: 0; }
+
+  .md\:text-center    { text-align: center; }
+  .md\:text-left      { text-align: left;   }
+
+  /* Show elements hidden on mobile */
+  .md\:visible        { visibility: visible; display: revert; }
+}
+
+/* --- lg: (1024px+) --- */
+@media (min-width: 1024px) {
+  .lg\:hidden         { display: none;        }
+  .lg\:block          { display: block;       }
+  .lg\:flex           { display: flex;        }
+  .lg\:grid           { display: grid;        }
+  .lg\:inline-flex    { display: inline-flex; }
+
+  .lg\:flex-row       { flex-direction: row;  }
+  .lg\:items-center   { align-items: center;  }
+  .lg\:items-start    { align-items: flex-start; }
+  .lg\:justify-between { justify-content: space-between; }
+
+  .lg\:grid-cols-2    { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lg\:grid-cols-3    { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lg\:grid-cols-4    { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+  .lg\:gap-6          { gap: var(--space-6);  }
+  .lg\:gap-8          { gap: var(--space-8);  }
+  .lg\:gap-12         { gap: var(--space-12); }
+
+  .lg\:p-10           { padding:  var(--space-10); }
+  .lg\:p-12           { padding:  var(--space-12); }
+  .lg\:px-10          { padding-left: var(--space-10); padding-right: var(--space-10); }
+  .lg\:py-16          { padding-top:  var(--space-16); padding-bottom: var(--space-16);}
+  .lg\:py-20          { padding-top:  var(--space-20); padding-bottom: var(--space-20);}
+
+  .lg\:w-auto         { width: auto; }
+  .lg\:w-1-2          { width: 50%;  }
+  .lg\:w-1-3          { width: 33.333%; }
+
+  /* Sticky sidebar pattern on desktop */
+  .lg\:sticky-top {
+    position: sticky;
+    top: calc(var(--header-height-desktop) + var(--space-6));
+  }
+
+  .lg\:text-left      { text-align: left;   }
+  .lg\:text-center    { text-align: center; }
+}
+
+/* --- xl: (1280px+) --- */
+@media (min-width: 1280px) {
+  .xl\:hidden         { display: none;   }
+  .xl\:block          { display: block;  }
+  .xl\:flex           { display: flex;   }
+  .xl\:grid           { display: grid;   }
+
+  .xl\:grid-cols-4    { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .xl\:grid-cols-5    { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+  .xl\:gap-8          { gap: var(--space-8);  }
+  .xl\:gap-12         { gap: var(--space-12); }
+
+  .xl\:py-20          { padding-top:  var(--space-20); padding-bottom: var(--space-20);}
+  .xl\:py-24          { padding-top:  var(--space-24); padding-bottom: var(--space-24);}
+}
+
+/* --- Mobile-only (max-width, use sparingly — prefer min-width mobile-first) --- */
+@media (max-width: 639px) {
+  .mobile-only { display: revert; }
+  .mobile-hidden { display: none !important; }
+  .mobile-full  { width: 100%; }
+  .mobile-stack { flex-direction: column !important; }
+  .mobile-center { text-align: center !important; justify-content: center !important; }
+}
+
+
+/* ==========================================================================
+   20. PRINT UTILITIES
+   ========================================================================== */
+
+@media print {
+  /* .no-print is defined in reset.css — not repeated here */
+  .print-only      { display: revert !important; }
+  .print-block     { display: block !important;  }
+  .print-full      { width: 100% !important;     }
+  .print-border    { border: 1px solid #000 !important; }
+  .print-no-shadow { box-shadow: none !important; }
+  .print-no-bg     { background: transparent !important; }
+  .print-text-black { color: #000 !important;    }
+}
+
+@media not print {
+  .print-only { display: none !important; }
+}
