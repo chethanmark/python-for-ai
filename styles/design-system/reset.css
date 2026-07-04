@@ -1,0 +1,1106 @@
+/* ==========================================================================
+   DESIGN SYSTEM — RESET
+   styles/design-system/reset.css
+   --------------------------------------------------------------------------
+   A modern, opinionated CSS reset built specifically for the Python for AI
+   educational platform. This file sits immediately after variables.css in
+   the import order and runs before any component or layout styles.
+
+   PHILOSOPHY:
+     A reset is not a blank slate — it is a deliberate baseline. Rather than
+     stripping every browser default and rebuilding from zero, this reset:
+       1. Removes inconsistencies between browsers (the classic reset job).
+       2. Applies sensible, accessible defaults that serve this platform.
+       3. Hooks into the design token system from variables.css throughout.
+       4. Establishes global accessibility affordances that all components
+          inherit automatically (focus styles, motion, color contrast).
+
+   LOAD ORDER:
+     1. variables.css   ← tokens defined here
+     2. reset.css       ← YOU ARE HERE — consumes those tokens
+     3. typography.css  ← builds on reset's baseline
+     4. utilities.css   ← utility classes on top of the full foundation
+
+   REFERENCES:
+     - Andy Bell's Modern CSS Reset (2023)
+     - Josh Comeau's Custom CSS Reset
+     - WCAG 2.1 AA accessibility guidelines
+     - MDN: prefers-reduced-motion
+     - MDN: :focus-visible
+
+   SECTIONS:
+     1.  Box Model             — universal border-box, no default margin/padding
+     2.  Document & Body       — root font, color, background, scroll behaviour
+     3.  Typography            — headings, paragraphs, links, strong, em, code
+     4.  Lists                 — ol, ul, dl — reset and accessible defaults
+     5.  Tables                — collapsed, readable, accessible table baseline
+     6.  Forms & Inputs        — buttons, inputs, selects, textareas, fieldsets
+     7.  Media                 — img, video, svg, canvas — responsive by default
+     8.  Interactive Elements  — details, summary, dialog, iframe
+     9.  Accessibility         — focus-visible, skip link, screen-reader utils
+    10.  Motion                — prefers-reduced-motion global override
+    11.  Print                 — minimal print stylesheet
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. BOX MODEL
+   --------------------------------------------------------------------------
+   Apply border-box sizing to every element universally. This means padding
+   and border are included in an element's declared width/height — the model
+   that every developer mentally expects but browsers don't default to.
+
+   The *, *::before, *::after pattern ensures pseudo-elements are also
+   covered. Using inherit rather than border-box directly on * allows a
+   parent to opt a subtree into content-box if ever needed (rare but valid).
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+
+  /* Prevent margin/padding collapsing from causing layout surprises.
+     Components own their spacing — no inherited margin or padding leaks. */
+  margin:  0;
+  padding: 0;
+}
+
+
+/* ==========================================================================
+   2. DOCUMENT & BODY
+   --------------------------------------------------------------------------
+   Establish the root rendering context: font stack, color, background,
+   and scroll behaviour. All values use design tokens so any brand update
+   propagates automatically across the entire platform.
+   ========================================================================== */
+
+html {
+  /* Prevent font size inflation on iOS when rotating to landscape.
+     Without this, Safari bumps font sizes, breaking the layout. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
+  /* Smooth scrolling for anchor navigation and JS scroll calls.
+     Controlled by prefers-reduced-motion in Section 10. */
+  scroll-behavior: smooth;
+
+  /* Use the 4px spacing base: 1rem = 16px (browser default).
+     We deliberately do NOT change the root font size with a percentage
+     trick. Changing rem at root breaks user zoom and accessibility. */
+  font-size: 16px;
+
+  /* Consistent tab width for any <pre> or <code> content.
+     Matches the 4-space convention used throughout tutorial content. */
+  tab-size: 4;
+  -moz-tab-size: 4;
+
+  /* Improve text rendering on macOS — subpixel antialiasing is less
+     legible on modern Retina displays. Grayscale is crisper. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  /* Base font stack — uses display font for character, body for readability.
+     Tokens defined in variables.css § Typography. */
+  font-family:  var(--font-body);
+  font-size:    var(--text-base);
+  font-weight:  var(--font-normal);
+  line-height:  var(--leading-normal);
+  letter-spacing: var(--tracking-normal);
+
+  /* Semantic color tokens — auto-switch in dark mode via variables.css. */
+  color:            var(--color-text-primary);
+  background-color: var(--color-bg-base);
+
+  /* Prevent content overflow from creating unexpected horizontal scroll. */
+  overflow-x: hidden;
+
+  /* Ensure body always fills at least the full viewport height.
+     Prevents short pages from leaving a strip of raw browser chrome. */
+  min-height: 100vh;
+
+  /* Full-bleed column layout: header + main + footer stack correctly. */
+  display: flex;
+  flex-direction: column;
+}
+
+/* All direct children of body that are main content areas should grow
+   to fill remaining space, pushing the footer to the bottom always. */
+body > main {
+  flex: 1 0 auto;
+}
+
+/* Constrain content within safe viewport area on notched devices
+   (iPhone with Dynamic Island, etc.) */
+body {
+  padding-left:  env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+
+/* ==========================================================================
+   3. TYPOGRAPHY
+   --------------------------------------------------------------------------
+   Establish the typographic baseline for all prose elements. Component CSS
+   will layer on top of these defaults — never fight them.
+
+   Key principle: headings and body text inherit from body by default.
+   typography.css adds the full type scale. This reset only ensures
+   browser defaults (bold 2em h1, italic em, etc.) don't bleed through.
+   ========================================================================== */
+
+/* --- Headings --- */
+h1, h2, h3, h4, h5, h6 {
+  /* Switch to display font for all headings — this is where
+     "Plus Jakarta Sans" delivers its technical-modern personality. */
+  font-family:   var(--font-display);
+  font-weight:   var(--font-bold);
+  line-height:   var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color:         var(--color-text-primary);
+
+  /* Prevent long words from breaking heading layouts on small screens. */
+  overflow-wrap: break-word;
+  word-break:    break-word;  /* Fallback for older browsers */
+}
+
+/* --- Paragraphs --- */
+p {
+  /* Paragraphs use relaxed leading — tutorials contain long reading passages.
+     A generous line-height measurably improves comprehension for learners. */
+  line-height:   var(--leading-relaxed);
+  overflow-wrap: break-word;
+
+  /* Balance text for short paragraphs (headings, intros, captions).
+     Supported in modern Chrome and Firefox; silently ignored elsewhere. */
+  text-wrap: pretty;
+}
+
+/* --- Links --- */
+a {
+  color:           var(--color-text-link);
+  text-decoration: underline;
+
+  /* Use the decorative underline offset for legibility — keeps the
+     underline visually separated from descenders (g, p, y, etc.) */
+  text-decoration-thickness: 1px;
+  text-underline-offset:     3px;
+  text-decoration-color:     currentColor;
+
+  transition: var(--transition-color);
+}
+
+a:hover {
+  color:               var(--color-text-link-hover);
+  text-decoration-thickness: 2px;
+}
+
+/* Remove default link styling inside components that style their own links
+   (nav items, buttons, cards). Apply .link class to restore styled links. */
+a:not([class]) {
+  /* Only plain unstyled links get the decorated treatment.
+     Links with utility classes manage their own decoration. */
+  text-decoration-skip-ink: auto;
+}
+
+/* --- Strong & Bold --- */
+strong, b {
+  font-weight: var(--font-semibold);
+}
+
+/* --- Emphasis & Italic --- */
+em, i {
+  /* Ensure italic renders correctly on all browsers — some reset it. */
+  font-style: italic;
+}
+
+/* --- Small text --- */
+small {
+  font-size: var(--text-sm);
+}
+
+/* --- Inline Code --- */
+code {
+  font-family:       var(--font-mono);
+  font-size:         0.9em;        /* Slightly smaller than surrounding text */
+  color:             var(--color-text-code);
+  background-color:  var(--color-code-subtle);
+  border:            1px solid var(--color-code-border);
+  border-radius:     var(--radius-sm);
+  padding:           0.1em 0.35em;
+
+  /* Prevent inline code from wrapping mid-token in most cases. */
+  white-space: nowrap;
+}
+
+/* --- Code Blocks (pre > code) --- */
+pre {
+  font-family:      var(--font-mono);
+  font-size:        var(--text-sm);
+  line-height:      var(--leading-loose);
+  color:            var(--editor-text);
+  background-color: var(--editor-bg);
+  border-radius:    var(--radius-lg);
+  padding:          var(--space-6);
+
+  /* Allow long lines to scroll horizontally rather than wrap.
+     This is the correct behaviour for code — wrapping breaks indentation. */
+  overflow-x: auto;
+  white-space: pre;
+
+  /* Custom scrollbar styling for code blocks (WebKit browsers) */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-emphasis) transparent;
+}
+
+/* Override the inline code styles when code is inside a pre block.
+   Code blocks handle their own background, border, and padding. */
+pre > code {
+  background-color: transparent;
+  border:           none;
+  border-radius:    0;
+  padding:          0;
+  color:            inherit;
+  font-size:        inherit;
+  white-space:      inherit;
+}
+
+/* --- Keyboard Input --- */
+kbd {
+  font-family:      var(--font-mono);
+  font-size:        var(--text-xs);
+  font-weight:      var(--font-medium);
+  color:            var(--color-text-secondary);
+  background-color: var(--color-bg-muted);
+  border:           1px solid var(--color-border-emphasis);
+  border-bottom-width: 2px;   /* Gives the physical key depth illusion */
+  border-radius:    var(--radius-sm);
+  padding:          0.1em 0.45em;
+  white-space:      nowrap;
+}
+
+/* --- Quotations --- */
+blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: var(--space-6);
+  margin-left:  0;
+  margin-right: 0;
+  color:        var(--color-text-secondary);
+  font-style:   italic;
+}
+
+blockquote > p {
+  /* Tighter line-height for the visually distinct quotation context */
+  line-height: var(--leading-normal);
+}
+
+/* --- Horizontal Rule --- */
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border-default);
+  margin: var(--space-8) 0;
+  color: inherit;
+}
+
+/* --- Mark / Highlight --- */
+mark {
+  background-color: var(--color-warning-subtle);
+  color:            var(--color-warning-text);
+  border-radius:    var(--radius-sm);
+  padding:          0.05em 0.2em;
+}
+
+/* --- Abbreviations --- */
+abbr[title] {
+  /* Dotted underline distinguishes abbreviations from links. */
+  text-decoration: underline dotted;
+  cursor: help;
+}
+
+/* --- Superscript & Subscript --- */
+sub, sup {
+  font-size:      var(--text-xs);
+  line-height:    0;           /* Prevent disrupting surrounding line height */
+  position:       relative;
+  vertical-align: baseline;
+}
+sup { top:    -0.5em; }
+sub { bottom: -0.25em; }
+
+
+/* ==========================================================================
+   4. LISTS
+   --------------------------------------------------------------------------
+   Remove default list markers and spacing for UI lists (nav, cards, etc).
+   Prose lists inside .prose containers restore bullets via typography.css.
+
+   Accessibility note: removing list-style-type removes the list semantics
+   in VoiceOver (Safari). We restore role="list" in HTML for nav lists, or
+   use typography.css to re-add styling for content lists.
+   ========================================================================== */
+
+ul, ol {
+  list-style: none;
+
+  /* Browsers apply left padding for the list marker gutter.
+     Without this, removing list-style still leaves indent on most browsers. */
+  padding-left: 0;
+}
+
+/* --- Definition Lists --- */
+dl {
+  display:   grid;
+  grid-template-columns: max-content 1fr;
+  gap:       var(--space-1) var(--space-6);
+}
+
+dt {
+  font-weight: var(--font-semibold);
+  color:       var(--color-text-primary);
+}
+
+dd {
+  color: var(--color-text-secondary);
+}
+
+
+/* ==========================================================================
+   5. TABLES
+   --------------------------------------------------------------------------
+   Normalize the notoriously inconsistent default table rendering.
+   Data tables appear in quizzes, comparison pages, and cheat sheets.
+   ========================================================================== */
+
+table {
+  /* Collapse removes the double-border that appears between cells by default.
+     Essential for any readable data table. */
+  border-collapse: collapse;
+  border-spacing:  0;
+
+  /* Tables should not overflow their container — they scroll instead. */
+  width: 100%;
+
+  font-size:   var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+/* Wrap tables in a container div in HTML to enable overflow scrolling
+   on narrow screens: <div class="table-wrapper"><table>... */
+
+caption {
+  font-size:   var(--text-sm);
+  font-weight: var(--font-medium);
+  color:       var(--color-text-secondary);
+  text-align:  left;
+  padding:     var(--space-2) 0;
+  caption-side: top;
+}
+
+th {
+  font-weight:   var(--font-semibold);
+  font-family:   var(--font-display);
+  letter-spacing: var(--tracking-wide);
+  text-align:    left;
+  text-transform: uppercase;
+  font-size:     var(--text-xs);
+  color:         var(--color-text-secondary);
+  border-bottom: 2px solid var(--color-border-emphasis);
+  padding:       var(--space-3) var(--space-4);
+  vertical-align: bottom;
+}
+
+td {
+  padding:       var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+  vertical-align: top;
+  color:         var(--color-text-primary);
+}
+
+/* Remove bottom border from the last row — the table container provides
+   the visual boundary, the row border would double it. */
+tr:last-child > td {
+  border-bottom: none;
+}
+
+/* Zebra striping via CSS — even rows get a very subtle background.
+   Improves readability for tables with many rows (cheat sheets, API docs). */
+tbody tr:nth-child(even) {
+  background-color: var(--color-bg-subtle);
+}
+
+
+/* ==========================================================================
+   6. FORMS & INPUTS
+   --------------------------------------------------------------------------
+   The most inconsistent browser category. Buttons, inputs, selects, and
+   textareas all render differently across Chrome, Firefox, and Safari.
+   This section establishes a consistent, themeable foundation.
+
+   Accessibility note: Never remove default form element styling without
+   replacing it. Visible styling = visible affordance = accessible.
+   ========================================================================== */
+
+/* --- Inherit font in all form controls ---
+   Browsers default to a system UI font for form elements, ignoring the
+   font-family on body. This single rule fixes that universally. */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family:  inherit;
+  font-size:    inherit;
+  font-weight:  inherit;
+  line-height:  inherit;
+  color:        inherit;
+
+  /* Prevent form controls from being smaller than the 44px WCAG touch target
+     minimum — components can override this for specific visual needs. */
+  min-height: 2.75rem;    /* 44px */
+}
+
+/* --- Buttons --- */
+button {
+  /* Remove all browser button defaults. Components style from zero. */
+  appearance:       none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  border:           none;
+  cursor:           pointer;
+  display:          inline-flex;
+  align-items:      center;
+  justify-content:  center;
+  gap:              var(--space-2);
+  padding:          0;
+  text-align:       center;
+  text-decoration:  none;
+  white-space:      nowrap;
+  user-select:      none;
+  -webkit-user-select: none;
+
+  /* Prevent text zooming causing button overflow on small screens */
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:disabled,
+button[aria-disabled="true"] {
+  cursor:  not-allowed;
+  opacity: 0.5;
+
+  /* Prevent pointer events to avoid accidental submits on disabled states */
+  pointer-events: none;
+}
+
+/* Ensure buttons in forms do not submit accidentally.
+   Always set type="button" in JS-driven buttons in HTML. */
+button:not([type]) {
+  type: button;    /* Fallback hint — always set type in HTML explicitly */
+}
+
+/* --- Text Inputs, Number, Email, Search, Tel, URL, Password --- */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+textarea,
+select {
+  appearance:       none;
+  -webkit-appearance: none;
+
+  display:          block;
+  width:            100%;
+  min-height:       2.75rem;    /* 44px — WCAG minimum touch target */
+
+  background-color: var(--color-bg-base);
+  color:            var(--color-text-primary);
+  border:           1px solid var(--color-border-emphasis);
+  border-radius:    var(--radius-md);
+  padding:          var(--space-2) var(--space-4);
+
+  font-family:      inherit;
+  font-size:        var(--text-base);
+  line-height:      var(--leading-normal);
+
+  transition:       var(--transition-color), box-shadow var(--duration-fast) var(--ease-out);
+}
+
+/* Placeholder text — should be clearly distinct from actual input. */
+input::placeholder,
+textarea::placeholder {
+  color:   var(--color-text-muted);
+  opacity: 1;    /* Firefox reduces opacity by default — prevent this. */
+}
+
+/* Disabled state */
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background-color: var(--color-bg-muted);
+  color:            var(--color-text-disabled);
+  cursor:           not-allowed;
+  border-color:     var(--color-border-subtle);
+}
+
+/* Readonly state */
+input:read-only,
+textarea:read-only {
+  background-color: var(--color-bg-subtle);
+  cursor:           default;
+}
+
+/* --- Textarea --- */
+textarea {
+  resize:    vertical;   /* Allow vertical resize only — horizontal breaks layouts */
+  min-height: 8rem;      /* Taller default than single-line inputs */
+  white-space: pre-wrap;
+}
+
+/* --- Select --- */
+select {
+  /* Custom caret arrow — replaces the browser default, which varies widely. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat:   no-repeat;
+  background-position: right var(--space-3) center;
+  background-size:     1rem 1rem;
+  padding-right:       var(--space-10);   /* Room for the custom arrow */
+  cursor:              pointer;
+}
+
+/* Multi-select: no arrow needed, scrollable list. */
+select[multiple] {
+  background-image:  none;
+  padding-right:     var(--space-4);
+  min-height:        8rem;
+}
+
+/* --- Checkboxes & Radio Buttons --- */
+input[type="checkbox"],
+input[type="radio"] {
+  /* Override the universal 2.75rem min-height for small inline controls */
+  min-height: unset;
+  width:  1.125rem;   /* 18px */
+  height: 1.125rem;
+  cursor: pointer;
+  accent-color: var(--color-primary);   /* Tints the native control brand blue */
+  vertical-align: middle;
+}
+
+/* --- Range Slider --- */
+input[type="range"] {
+  min-height:    unset;
+  height:        var(--space-2);
+  padding:       0;
+  border:        none;
+  background:    var(--color-border-default);
+  border-radius: var(--radius-full);
+  cursor:        pointer;
+  accent-color:  var(--color-primary);
+}
+
+/* --- File Input --- */
+input[type="file"] {
+  min-height: unset;
+  cursor:     pointer;
+  padding:    var(--space-2);
+  font-size:  var(--text-sm);
+}
+
+/* Styled button part of file inputs */
+input[type="file"]::file-selector-button {
+  font-family:      inherit;
+  font-size:        var(--text-sm);
+  font-weight:      var(--font-medium);
+  background-color: var(--color-bg-muted);
+  color:            var(--color-text-primary);
+  border:           1px solid var(--color-border-default);
+  border-radius:    var(--radius-md);
+  padding:          var(--space-1) var(--space-3);
+  margin-right:     var(--space-3);
+  cursor:           pointer;
+  transition:       var(--transition-color);
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: var(--color-bg-emphasis);
+}
+
+/* --- Fieldset & Legend --- */
+fieldset {
+  border:        1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding:       var(--space-4) var(--space-6);
+  min-width:     0;     /* Prevents fieldset from overflowing flex/grid parents */
+}
+
+legend {
+  font-weight:   var(--font-semibold);
+  font-size:     var(--text-sm);
+  color:         var(--color-text-secondary);
+  padding:       0 var(--space-2);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* --- Output --- */
+output {
+  display: block;
+  font-family: var(--font-mono);
+  font-size:   var(--text-sm);
+  color:       var(--color-text-secondary);
+}
+
+
+/* ==========================================================================
+   7. MEDIA
+   --------------------------------------------------------------------------
+   Make all media elements responsive by default and prevent overflow.
+   Images, videos, and SVGs should never break out of their containers.
+   ========================================================================== */
+
+/* --- Images & Video --- */
+img,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  /* Responsive: never wider than their container. */
+  max-width: 100%;
+
+  /* Remove the gap that appears below inline-block images (descender space). */
+  display: block;
+}
+
+/* --- Images specifically --- */
+img {
+  /* Maintain aspect ratio when width is constrained. */
+  height: auto;
+
+  /* Prevent images from being dragged out of context. */
+  -webkit-user-drag: none;
+  user-drag:         none;
+
+  /* Visually hide broken images — the alt text still appears. */
+  font-style:  italic;
+  font-size:   var(--text-sm);
+  color:       var(--color-text-muted);
+}
+
+/* Lazy-loaded images: apply a subtle fade-in when loaded.
+   The .loaded class is toggled by intersection observer in main.js. */
+img[loading="lazy"] {
+  opacity:    0;
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* --- SVG --- */
+svg {
+  /* SVG icons should respect the current text color so they
+     automatically adapt when used alongside text. */
+  fill:        currentColor;
+  flex-shrink: 0;       /* Prevent SVG icons from shrinking in flex containers */
+  overflow:    hidden;  /* Clip any SVG content that bleeds past viewBox */
+}
+
+/* --- Video --- */
+video {
+  /* Videos should maintain their recorded aspect ratio. */
+  height: auto;
+}
+
+/* --- Iframe (embeds, YouTube videos in tutorials) --- */
+iframe {
+  border: none;
+}
+
+
+/* ==========================================================================
+   8. INTERACTIVE ELEMENTS
+   --------------------------------------------------------------------------
+   Normalize details, summary, dialog, and other interactive HTML elements
+   that have inconsistent default rendering across browsers.
+   ========================================================================== */
+
+/* --- Details / Summary (used for spoilers, hints, FAQ) --- */
+details {
+  border:        1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding:       var(--space-4);
+}
+
+details > * + * {
+  margin-top: var(--space-3);
+}
+
+summary {
+  font-weight:   var(--font-medium);
+  color:         var(--color-text-primary);
+  cursor:        pointer;
+  list-style:    none;     /* Remove the default triangle marker */
+  user-select:   none;
+  -webkit-user-select: none;
+
+  /* We'll add a custom marker via CSS so it's styleable. */
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Remove the ::marker pseudo-element in Chrome and Safari */
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Custom disclosure triangle using a CSS-only approach */
+summary::before {
+  content:    "▶";
+  font-size:  var(--text-xs);
+  color:      var(--color-text-muted);
+  transition: transform var(--duration-normal) var(--ease-out);
+  display:    inline-block;
+  flex-shrink: 0;
+}
+
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+/* --- Dialog (modal base) --- */
+dialog {
+  /* Remove browser default dialog positioning and styling.
+     The modal.css component file provides full styling. */
+  background-color: var(--color-bg-base);
+  color:            var(--color-text-primary);
+  border:           none;
+  border-radius:    var(--radius-xl);
+  box-shadow:       var(--shadow-2xl);
+  padding:          var(--space-8);
+  max-width:        min(90vw, var(--container-sm));
+  max-height:       85vh;
+  overflow-y:       auto;
+}
+
+/* Backdrop for native <dialog> element */
+dialog::backdrop {
+  background-color: var(--color-bg-overlay);
+  backdrop-filter:  blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+
+/* ==========================================================================
+   9. ACCESSIBILITY
+   --------------------------------------------------------------------------
+   Global accessibility patterns that all components inherit.
+   These are non-negotiable — they must never be removed or overridden
+   without providing an equal or better replacement.
+
+   TARGET: WCAG 2.1 Level AA compliance across all interactive elements.
+   ========================================================================== */
+
+/* --- Focus Visible Ring ---
+   :focus-visible fires only for keyboard navigation (Tab, Shift+Tab,
+   arrow keys), NOT for mouse clicks. This means sighted mouse users
+   don't see focus rings, but keyboard and assistive technology users
+   always do. This is the correct modern approach.
+
+   :focus-within is used on containers to propagate focus context up. */
+
+/* Remove the browser default focus outline globally — we replace it. */
+*:focus {
+  outline: none;
+}
+
+/* Apply a crisp, high-contrast focus ring for keyboard users only. */
+*:focus-visible {
+  outline:        2px solid var(--color-border-focus);
+  outline-offset: 3px;
+  border-radius:  var(--radius-sm);
+
+  /* Additional box-shadow focus ring provides visibility against both
+     light and dark backgrounds — critical for WCAG 1.4.11 compliance. */
+  box-shadow: var(--shadow-focus);
+}
+
+/* Danger-context focus (for destructive action buttons, error inputs) */
+.focus-danger:focus-visible {
+  outline-color: var(--color-danger);
+  box-shadow:    var(--shadow-focus-danger);
+}
+
+/* --- Skip Navigation Link ---
+   The very first interactive element on every page. Hidden off-screen
+   until focused via Tab key. Allows keyboard/screen-reader users to skip
+   the repeated header navigation and jump directly to main content.
+
+   Usage in HTML:
+     <a href="#main-content" class="skip-link">Skip to main content</a>
+     <main id="main-content"> ... </main>
+*/
+.skip-link {
+  position:  absolute;
+  top:       var(--space-4);
+  left:      var(--space-4);
+  z-index:   var(--z-tooltip);   /* Always on top */
+
+  background-color: var(--color-primary);
+  color:            var(--color-text-inverse);
+  font-weight:      var(--font-semibold);
+  font-size:        var(--text-sm);
+  padding:          var(--space-3) var(--space-6);
+  border-radius:    var(--radius-md);
+  text-decoration:  none;
+  white-space:      nowrap;
+
+  /* Hidden off-screen — not display:none (that removes it from tab order) */
+  transform: translateY(calc(-100% - var(--space-8)));
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline:   none;    /* Custom styling is sufficient — skip the ring */
+  box-shadow: var(--shadow-lg);
+}
+
+/* --- Screen Reader Only ---
+   Visually hides content while keeping it accessible to screen readers.
+   Use for: icon button labels, table headers for complex tables,
+   additional context that sighted users don't need but AT users do.
+
+   Usage: <span class="sr-only">Close dialog</span>
+*/
+.sr-only {
+  position:   absolute;
+  width:      1px;
+  height:     1px;
+  padding:    0;
+  margin:     -1px;
+  overflow:   hidden;
+  clip:       rect(0, 0, 0, 0);
+  clip-path:  inset(50%);
+  white-space: nowrap;
+  border:     0;
+}
+
+/* Allow .sr-only elements to become visible when focused (for
+   skip links and other focus-activated helper content). */
+.sr-only-focusable:focus-visible,
+.sr-only:focus-visible {
+  position:   static;
+  width:      auto;
+  height:     auto;
+  padding:    inherit;
+  margin:     0;
+  overflow:   visible;
+  clip:       auto;
+  clip-path:  none;
+  white-space: normal;
+}
+
+/* --- Visually Hidden (display:none alternative) ---
+   Hides content from both visual users AND screen readers.
+   Use only for temporarily hidden content (collapsed menus, modals).
+   Never use for content that should be accessible. */
+.visually-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* --- ARIA Hidden ---
+   When aria-hidden="true" is set, content should not be interactable. */
+[aria-hidden="true"] {
+  pointer-events: none;
+}
+
+/* --- Disabled state (global) ---
+   When aria-disabled is present without actual disabled attribute
+   (e.g., on a div or anchor acting as a button). */
+[aria-disabled="true"] {
+  cursor:  not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* --- Color contrast for selection --- */
+::selection {
+  background-color: var(--color-primary);
+  color:            var(--color-text-inverse);
+}
+
+::-moz-selection {
+  background-color: var(--color-primary);
+  color:            var(--color-text-inverse);
+}
+
+/* --- Scrollbar styling (WebKit browsers) ---
+   Subtle, themed scrollbars that don't clash with the design system.
+   Firefox uses scrollbar-width and scrollbar-color (set on pre above). */
+::-webkit-scrollbar {
+  width:  8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-emphasis);
+  border-radius:    var(--radius-full);
+  border:           2px solid transparent;
+  background-clip:  content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-muted);
+}
+
+
+/* ==========================================================================
+   10. MOTION
+   --------------------------------------------------------------------------
+   Respect the user's operating system preference to reduce motion.
+   This is a critical accessibility feature for users with vestibular
+   disorders, epilepsy, or motion sensitivity.
+
+   WCAG 2.1 Success Criterion 2.3.3 (AAA) recommends this pattern.
+   We apply it at AA level as a baseline — it is non-negotiable.
+
+   Strategy:
+     - ALL animations and transitions default to ON (defined in components).
+     - This media query strips ALL motion for users who prefer reduced motion.
+     - Exceptions are made only for opacity fades — those are safe for most
+       vestibular conditions because they do not involve spatial movement.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  /* Universal override: disable all animations and transitions.
+     The !important is intentional — this must override component styles
+     that define their own transition values. */
+  *,
+  *::before,
+  *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior:           auto   !important;
+  }
+
+  /* Exception: opacity transitions are safe for vestibular disorders
+     because they do not involve spatial movement. Re-enable a fast fade. */
+  *[class*="fade"] {
+    transition-duration: var(--duration-fast) !important;
+  }
+
+  /* Exception: the skip link transform must still work — it uses
+     translateY which is spatial. Collapse instantly instead. */
+  .skip-link {
+    transition: none !important;
+  }
+
+  /* Disable the custom details summary rotation animation. */
+  summary::before {
+    transition: none !important;
+  }
+
+  /* Disable lazy-load image fade — images appear immediately instead. */
+  img[loading="lazy"] {
+    opacity:    1 !important;
+    transition: none !important;
+  }
+}
+
+
+/* ==========================================================================
+   11. PRINT
+   --------------------------------------------------------------------------
+   A minimal print stylesheet. Users may print tutorial pages, cheat sheets,
+   or quiz results. This ensures printed content is readable and ink-efficient.
+   ========================================================================== */
+
+@media print {
+
+  /* Use black text on white background — print-friendly */
+  *,
+  *::before,
+  *::after {
+    color:             #000 !important;
+    background-color:  transparent !important;
+    box-shadow:        none !important;
+    text-shadow:       none !important;
+  }
+
+  /* Set page margins */
+  @page {
+    margin: 1.5cm;
+  }
+
+  /* Ensure the body is not constrained for print */
+  body {
+    font-size:  12pt;
+    line-height: 1.5;
+    display:    block;    /* Remove flex so print renders correctly */
+    min-height: auto;
+  }
+
+  /* Expand links to show their URL after the anchor text.
+     Useful for tutorial reference links. */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #555;
+  }
+
+  /* Don't print URLs for in-page anchors or JS links */
+  a[href^="#"]::after,
+  a[href^="javascript:"]::after {
+    content: "";
+  }
+
+  /* Keep headings with the content that follows them */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* Prevent orphaned images at the bottom of a printed page */
+  img, figure, pre, blockquote, table {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Show the full URL for abbreviations */
+  abbr[title]::after {
+    content: " (" attr(title) ")";
+  }
+
+  /* Hide navigation, interactive elements, and non-content UI */
+  header nav,
+  footer,
+  .skip-link,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Render code blocks in a print-friendly way */
+  pre, code {
+    border:      1px solid #ccc;
+    white-space: pre-wrap;
+    word-break:  break-word;
+  }
+}

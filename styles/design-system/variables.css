@@ -1,0 +1,678 @@
+/* ==========================================================================
+   DESIGN SYSTEM — VARIABLES
+   styles/design-system/variables.css
+   --------------------------------------------------------------------------
+   Single source of truth for every design token in the Python for AI
+   educational platform. No layout, no component styles — only custom
+   properties (CSS variables) on :root.
+
+   HOW TO USE:
+     Reference any token in any CSS file:
+       color: var(--color-primary);
+       padding: var(--space-4);
+
+   HOW TO EXTEND:
+     Add new tokens here first. Never hardcode a color, size, or duration
+     directly in a component file — always declare it here and reference it.
+
+   SECTIONS:
+     1.  Color Primitives       — raw hex palette, never used directly in UI
+     2.  Semantic Colors        — named roles that map primitives to meaning
+     3.  Typography             — font families, size scale, weights, leading
+     4.  Spacing Scale          — consistent spacing units (4px base grid)
+     5.  Border Radius          — corner rounding tokens
+     6.  Shadows                — elevation / depth system
+     7.  Z-Index Layers         — stacking order management
+     8.  Transitions            — duration and easing tokens
+     9.  Breakpoints            — responsive layout thresholds (CSS only)
+    10.  Layout                 — max widths, grid columns, container padding
+    11.  Component Tokens        — component-level overrides and specifics
+    12.  Dark Mode               — automatic dark palette via prefers-color-scheme
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. COLOR PRIMITIVES
+   --------------------------------------------------------------------------
+   These are raw hex values that form the complete palette. They are NEVER
+   referenced directly in components or layout. Instead, they are assigned
+   to semantic tokens in Section 2.
+
+   Naming: --primitive-{hue}-{lightness-step}
+   Steps: 50 (lightest) → 900 (darkest), following a perceptually even scale.
+   ========================================================================== */
+
+:root {
+
+  /* --- Blue (Primary brand color — intelligence, trust, technology) --- */
+  --primitive-blue-50:  #EFF6FF;
+  --primitive-blue-100: #DBEAFE;
+  --primitive-blue-200: #BFDBFE;
+  --primitive-blue-300: #93C5FD;
+  --primitive-blue-400: #60A5FA;
+  --primitive-blue-500: #3B82F6;
+  --primitive-blue-600: #2563EB;
+  --primitive-blue-700: #1D4ED8;
+  --primitive-blue-800: #1E40AF;
+  --primitive-blue-900: #1E3A8A;
+
+  /* --- Violet (AI/ML accent — creativity, depth, neural networks) --- */
+  --primitive-violet-50:  #F5F3FF;
+  --primitive-violet-100: #EDE9FE;
+  --primitive-violet-200: #DDD6FE;
+  --primitive-violet-300: #C4B5FD;
+  --primitive-violet-400: #A78BFA;
+  --primitive-violet-500: #8B5CF6;
+  --primitive-violet-600: #7C3AED;
+  --primitive-violet-700: #6D28D9;
+  --primitive-violet-800: #5B21B6;
+  --primitive-violet-900: #4C1D95;
+
+  /* --- Emerald (Success — correct answers, completed lessons, passing) --- */
+  --primitive-emerald-50:  #ECFDF5;
+  --primitive-emerald-100: #D1FAE5;
+  --primitive-emerald-200: #A7F3D0;
+  --primitive-emerald-300: #6EE7B7;
+  --primitive-emerald-400: #34D399;
+  --primitive-emerald-500: #10B981;
+  --primitive-emerald-600: #059669;
+  --primitive-emerald-700: #047857;
+  --primitive-emerald-800: #065F46;
+  --primitive-emerald-900: #064E3B;
+
+  /* --- Amber (Warning — hints, in-progress, partial credit) --- */
+  --primitive-amber-50:  #FFFBEB;
+  --primitive-amber-100: #FEF3C7;
+  --primitive-amber-200: #FDE68A;
+  --primitive-amber-300: #FCD34D;
+  --primitive-amber-400: #FBBF24;
+  --primitive-amber-500: #F59E0B;
+  --primitive-amber-600: #D97706;
+  --primitive-amber-700: #B45309;
+  --primitive-amber-800: #92400E;
+  --primitive-amber-900: #78350F;
+
+  /* --- Red (Danger — errors, wrong answers, failed execution) --- */
+  --primitive-red-50:  #FEF2F2;
+  --primitive-red-100: #FEE2E2;
+  --primitive-red-200: #FECACA;
+  --primitive-red-300: #FCA5A5;
+  --primitive-red-400: #F87171;
+  --primitive-red-500: #EF4444;
+  --primitive-red-600: #DC2626;
+  --primitive-red-700: #B91C1C;
+  --primitive-red-800: #991B1B;
+  --primitive-red-900: #7F1D1D;
+
+  /* --- Slate (Neutral grays — backgrounds, text, borders, dividers) --- */
+  --primitive-slate-0:   #FFFFFF;
+  --primitive-slate-50:  #F8FAFC;
+  --primitive-slate-100: #F1F5F9;
+  --primitive-slate-200: #E2E8F0;
+  --primitive-slate-300: #CBD5E1;
+  --primitive-slate-400: #94A3B8;
+  --primitive-slate-500: #64748B;
+  --primitive-slate-600: #475569;
+  --primitive-slate-700: #334155;
+  --primitive-slate-800: #1E293B;
+  --primitive-slate-900: #0F172A;
+  --primitive-slate-950: #020617;
+
+  /* --- Cyan (Code / terminal accent — Python REPL, code output) --- */
+  --primitive-cyan-50:  #ECFEFF;
+  --primitive-cyan-100: #CFFAFE;
+  --primitive-cyan-200: #A5F3FC;
+  --primitive-cyan-300: #67E8F9;
+  --primitive-cyan-400: #22D3EE;
+  --primitive-cyan-500: #06B6D4;
+  --primitive-cyan-600: #0891B2;
+  --primitive-cyan-700: #0E7490;
+  --primitive-cyan-800: #155E75;
+  --primitive-cyan-900: #164E63;
+
+
+  /* ==========================================================================
+     2. SEMANTIC COLORS
+     --------------------------------------------------------------------------
+     These are the tokens components and layouts should ALWAYS reference.
+     They map the raw primitives above to meaningful interface roles.
+     Changing a semantic token here changes it everywhere it is used.
+     ========================================================================== */
+
+  /* --- Brand --- */
+  --color-primary:         var(--primitive-blue-600);
+  --color-primary-hover:   var(--primitive-blue-700);
+  --color-primary-active:  var(--primitive-blue-800);
+  --color-primary-subtle:  var(--primitive-blue-50);
+  --color-primary-border:  var(--primitive-blue-200);
+
+  --color-accent:          var(--primitive-violet-600);
+  --color-accent-hover:    var(--primitive-violet-700);
+  --color-accent-subtle:   var(--primitive-violet-50);
+  --color-accent-border:   var(--primitive-violet-200);
+
+  /* --- Status --- */
+  --color-success:         var(--primitive-emerald-600);
+  --color-success-hover:   var(--primitive-emerald-700);
+  --color-success-subtle:  var(--primitive-emerald-50);
+  --color-success-border:  var(--primitive-emerald-200);
+  --color-success-text:    var(--primitive-emerald-800);
+
+  --color-warning:         var(--primitive-amber-500);
+  --color-warning-hover:   var(--primitive-amber-600);
+  --color-warning-subtle:  var(--primitive-amber-50);
+  --color-warning-border:  var(--primitive-amber-200);
+  --color-warning-text:    var(--primitive-amber-800);
+
+  --color-danger:          var(--primitive-red-600);
+  --color-danger-hover:    var(--primitive-red-700);
+  --color-danger-subtle:   var(--primitive-red-50);
+  --color-danger-border:   var(--primitive-red-200);
+  --color-danger-text:     var(--primitive-red-800);
+
+  /* --- Code / Terminal --- */
+  --color-code:            var(--primitive-cyan-600);
+  --color-code-subtle:     var(--primitive-cyan-50);
+  --color-code-border:     var(--primitive-cyan-200);
+
+  /* --- Backgrounds --- */
+  --color-bg-base:         var(--primitive-slate-0);      /* Page background    */
+  --color-bg-subtle:       var(--primitive-slate-50);     /* Section background */
+  --color-bg-muted:        var(--primitive-slate-100);    /* Card backgrounds   */
+  --color-bg-emphasis:     var(--primitive-slate-200);    /* Hover states       */
+  --color-bg-inverse:      var(--primitive-slate-900);    /* Dark panels        */
+  --color-bg-code:         var(--primitive-slate-900);    /* Code editor bg     */
+  --color-bg-overlay:      rgba(15, 23, 42, 0.60);        /* Modal backdrops    */
+
+  /* --- Text --- */
+  --color-text-primary:    var(--primitive-slate-900);    /* Main body text     */
+  --color-text-secondary:  var(--primitive-slate-600);    /* Supporting text    */
+  --color-text-muted:      var(--primitive-slate-400);    /* Placeholder, meta  */
+  --color-text-disabled:   var(--primitive-slate-300);    /* Disabled elements  */
+  --color-text-inverse:    var(--primitive-slate-0);      /* On dark bg         */
+  --color-text-code:       var(--primitive-cyan-400);     /* Inline code        */
+  --color-text-link:       var(--primitive-blue-600);     /* Hyperlinks         */
+  --color-text-link-hover: var(--primitive-blue-800);     /* Hovered links      */
+
+  /* --- Borders --- */
+  --color-border-subtle:   var(--primitive-slate-100);    /* Barely-there lines */
+  --color-border-default:  var(--primitive-slate-200);    /* Standard borders   */
+  --color-border-emphasis: var(--primitive-slate-300);    /* Stronger borders   */
+  --color-border-focus:    var(--primitive-blue-500);     /* Keyboard focus     */
+
+  /* --- Interactive (buttons, inputs, links) --- */
+  --color-interactive-bg:       var(--primitive-blue-600);
+  --color-interactive-bg-hover: var(--primitive-blue-700);
+  --color-interactive-fg:       var(--primitive-slate-0);
+
+
+  /* ==========================================================================
+     3. TYPOGRAPHY
+     --------------------------------------------------------------------------
+     All font-related tokens. Never hardcode font values in components.
+     ========================================================================== */
+
+  /* --- Font Families --- */
+  /*
+     Display/Headings: "Plus Jakarta Sans" — geometric, modern, technical feel
+     that suits an AI education platform without looking like a generic SaaS site.
+     Body: "Inter" — workhorse for long-form reading, optimized for screens.
+     Mono: "JetBrains Mono" — designed specifically for code; wider x-height,
+     ligatures for common programming symbols (=>, !=, ===).
+     System fallbacks ensure text renders immediately before fonts load (FOUT).
+  */
+  --font-display: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
+  --font-body:    "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+                  "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono:    "JetBrains Mono", "Fira Code", "Cascadia Code",
+                  "Source Code Pro", ui-monospace, "Courier New", monospace;
+
+  /* --- Font Sizes (Modular scale — ratio 1.25 "Major Third") ---
+     Base: 1rem = 16px (browser default, never override on html/body).
+     Naming follows T-shirt sizing for quick recall.
+  */
+  --text-xs:   0.75rem;    /*  12px — labels, captions, badges          */
+  --text-sm:   0.875rem;   /*  14px — secondary text, metadata           */
+  --text-base: 1rem;       /*  16px — body text, default                 */
+  --text-md:   1.125rem;   /*  18px — lead paragraph, card descriptions  */
+  --text-lg:   1.25rem;    /*  20px — small headings, section intros     */
+  --text-xl:   1.5rem;     /*  24px — card titles, subsection headings   */
+  --text-2xl:  1.875rem;   /*  30px — section headings (h3)              */
+  --text-3xl:  2.25rem;    /*  36px — page headings (h2)                 */
+  --text-4xl:  3rem;       /*  48px — hero headings (h1)                 */
+  --text-5xl:  3.75rem;    /*  60px — display, hero on large screens     */
+  --text-6xl:  4.5rem;     /*  72px — hero display, marketing pages      */
+
+  /* --- Font Weights --- */
+  --font-normal:    400;
+  --font-medium:    500;
+  --font-semibold:  600;
+  --font-bold:      700;
+  --font-extrabold: 800;
+
+  /* --- Line Heights --- */
+  --leading-none:    1;       /* Large display headings, tightly packed    */
+  --leading-tight:   1.25;    /* Headings, short strings                   */
+  --leading-snug:    1.375;   /* Card titles, compact headings             */
+  --leading-normal:  1.5;     /* Body text, default                        */
+  --leading-relaxed: 1.625;   /* Long-form prose, tutorials                */
+  --leading-loose:   2;       /* Spaced lists, accessible reading mode     */
+
+  /* --- Letter Spacing --- */
+  --tracking-tighter: -0.05em;
+  --tracking-tight:   -0.025em;
+  --tracking-normal:   0em;
+  --tracking-wide:     0.025em;
+  --tracking-wider:    0.05em;
+  --tracking-widest:   0.1em;   /* Uppercase labels, section eyebrows    */
+
+
+  /* ==========================================================================
+     4. SPACING SCALE
+     --------------------------------------------------------------------------
+     4px base grid. Every spacing value is a multiple of 4px (0.25rem).
+     Using a consistent scale prevents arbitrary spacing and keeps the
+     layout visually harmonious.
+
+     Naming: --space-{step}
+     Convention: step number × 4 = pixel value
+     E.g. --space-4 = 4 × 4px = 16px
+     ========================================================================== */
+
+  --space-px:  1px;         /*   1px — hairline borders, dividers         */
+  --space-0:   0;           /*   0px — reset                              */
+  --space-1:   0.25rem;     /*   4px — icon gap, tight inline spacing     */
+  --space-2:   0.5rem;      /*   8px — small padding, icon margins        */
+  --space-3:   0.75rem;     /*  12px — compact button padding             */
+  --space-4:   1rem;        /*  16px — default padding, card gap          */
+  --space-5:   1.25rem;     /*  20px — medium element spacing             */
+  --space-6:   1.5rem;      /*  24px — section inner padding              */
+  --space-7:   1.75rem;     /*  28px — comfortable element gap            */
+  --space-8:   2rem;        /*  32px — component spacing                  */
+  --space-10:  2.5rem;      /*  40px — large component gap                */
+  --space-12:  3rem;        /*  48px — section padding                    */
+  --space-14:  3.5rem;      /*  56px — comfortable section gap            */
+  --space-16:  4rem;        /*  64px — large section spacing              */
+  --space-20:  5rem;        /*  80px — hero padding, major sections       */
+  --space-24:  6rem;        /*  96px — generous section breathing room    */
+  --space-28:  7rem;        /* 112px — very large vertical rhythm         */
+  --space-32:  8rem;        /* 128px — hero top padding on large screens  */
+
+  /* --- Semantic Spacing Aliases (use these in components) --- */
+  --gap-xs:  var(--space-1);   /*  4px  */
+  --gap-sm:  var(--space-2);   /*  8px  */
+  --gap-md:  var(--space-4);   /* 16px  */
+  --gap-lg:  var(--space-8);   /* 32px  */
+  --gap-xl:  var(--space-16);  /* 64px  */
+
+  --padding-button-sm:  var(--space-2) var(--space-3);
+  --padding-button-md:  var(--space-3) var(--space-6);
+  --padding-button-lg:  var(--space-4) var(--space-8);
+
+  --padding-card:    var(--space-6);
+  --padding-section: var(--space-12) var(--space-4);
+
+
+  /* ==========================================================================
+     5. BORDER RADIUS
+     --------------------------------------------------------------------------
+     Consistent corner rounding. The platform uses a slightly rounded
+     aesthetic — modern and friendly without being playful or childish.
+     This reflects the approachable-but-technical tone of an AI education site.
+     ========================================================================== */
+
+  --radius-none:  0;
+  --radius-sm:    0.25rem;    /*  4px — badges, small chips, table cells  */
+  --radius-md:    0.5rem;     /*  8px — buttons, inputs, small cards      */
+  --radius-lg:    0.75rem;    /* 12px — cards, panels                     */
+  --radius-xl:    1rem;       /* 16px — large cards, modals               */
+  --radius-2xl:   1.5rem;     /* 24px — feature sections, hero elements   */
+  --radius-full:  9999px;     /* Pill shape — tags, toggles, avatars      */
+
+
+  /* ==========================================================================
+     6. SHADOWS
+     --------------------------------------------------------------------------
+     Elevation system. More shadow = more elevated = more visual importance.
+     Shadows use a warm-neutral tint (slate) to feel grounded rather than cold.
+     Designed to work correctly in both light and dark contexts.
+     ========================================================================== */
+
+  /* --- Light-mode shadows --- */
+  --shadow-xs:
+    0 1px 2px 0 rgba(15, 23, 42, 0.06);
+
+  --shadow-sm:
+    0 1px 3px 0 rgba(15, 23, 42, 0.10),
+    0 1px 2px -1px rgba(15, 23, 42, 0.10);
+
+  --shadow-md:
+    0 4px 6px -1px rgba(15, 23, 42, 0.10),
+    0 2px 4px -2px rgba(15, 23, 42, 0.10);
+
+  --shadow-lg:
+    0 10px 15px -3px rgba(15, 23, 42, 0.10),
+    0 4px 6px -4px rgba(15, 23, 42, 0.10);
+
+  --shadow-xl:
+    0 20px 25px -5px rgba(15, 23, 42, 0.10),
+    0 8px 10px -6px rgba(15, 23, 42, 0.10);
+
+  --shadow-2xl:
+    0 25px 50px -12px rgba(15, 23, 42, 0.25);
+
+  /* --- Colored / interactive shadows (for focus rings and hover states) --- */
+  --shadow-focus:
+    0 0 0 3px rgba(37, 99, 235, 0.35);           /* Blue focus ring            */
+
+  --shadow-focus-danger:
+    0 0 0 3px rgba(220, 38, 38, 0.35);           /* Red focus ring             */
+
+  --shadow-card-hover:
+    0 8px 24px -4px rgba(15, 23, 42, 0.14),
+    0 4px 8px -4px rgba(15, 23, 42, 0.10);
+
+  /* --- Inset shadows (for pressed states, code editors) --- */
+  --shadow-inset:
+    inset 0 2px 4px 0 rgba(15, 23, 42, 0.06);
+
+  --shadow-none: none;
+
+
+  /* ==========================================================================
+     7. Z-INDEX LAYERS
+     --------------------------------------------------------------------------
+     Named layers prevent z-index conflicts across components. Always use
+     these tokens — never use raw numbers like z-index: 999.
+     ========================================================================== */
+
+  --z-below:       -1;    /* Behind everything (backgrounds, decorative)  */
+  --z-base:         0;    /* Default document flow                        */
+  --z-raised:      10;    /* Cards on hover, inline dropdowns             */
+  --z-dropdown:   100;    /* Dropdowns, select menus, autocomplete        */
+  --z-sticky:     200;    /* Sticky header, sticky sidebar                */
+  --z-overlay:    300;    /* Drawer backgrounds, overlay panels           */
+  --z-modal:      400;    /* Modal dialogs, full-screen overlays          */
+  --z-toast:      500;    /* Toast notifications, snackbars               */
+  --z-tooltip:    600;    /* Tooltips — always above everything           */
+
+
+  /* ==========================================================================
+     8. TRANSITIONS
+     --------------------------------------------------------------------------
+     Consistent animation tokens keep micro-interactions cohesive.
+     All durations should respect prefers-reduced-motion (handled in reset.css).
+     ========================================================================== */
+
+  /* --- Durations --- */
+  --duration-instant:  50ms;
+  --duration-fast:     100ms;
+  --duration-normal:   200ms;
+  --duration-slow:     300ms;
+  --duration-slower:   500ms;
+  --duration-lazy:     700ms;
+
+  /* --- Easing Curves --- */
+  --ease-linear:    linear;
+  --ease-in:        cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:       cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out:    cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce:    cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring:    cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* --- Shorthand Transition Presets --- */
+  --transition-base:
+    all var(--duration-normal) var(--ease-in-out);
+
+  --transition-color:
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+
+  --transition-transform:
+    transform var(--duration-normal) var(--ease-out);
+
+  --transition-shadow:
+    box-shadow var(--duration-normal) var(--ease-out);
+
+  --transition-opacity:
+    opacity var(--duration-normal) var(--ease-in-out);
+
+
+  /* ==========================================================================
+     9. BREAKPOINTS
+     --------------------------------------------------------------------------
+     CSS custom properties cannot be used inside @media queries (a known
+     limitation). These are documented here for reference only. The actual
+     breakpoint values are used directly in each CSS file's @media rules.
+
+     Use these in CSS as:  @media (min-width: 640px) { ... }
+     Use these in JS as:   constants.js → BREAKPOINTS
+
+     Breakpoint strategy: mobile-first.
+     Write base styles for mobile. Use min-width to expand for larger screens.
+     ========================================================================== */
+
+  /*
+     --breakpoint-sm:   640px;    Small devices (large phones, landscape)
+     --breakpoint-md:   768px;    Tablets (portrait)
+     --breakpoint-lg:  1024px;    Tablets (landscape), small laptops
+     --breakpoint-xl:  1280px;    Desktop, standard laptops
+     --breakpoint-2xl: 1536px;    Large desktops, wide monitors
+  */
+
+
+  /* ==========================================================================
+     10. LAYOUT
+     --------------------------------------------------------------------------
+     Structural tokens for containers, grids, and consistent layout rhythm.
+     ========================================================================== */
+
+  /* --- Container Max Widths --- */
+  --container-sm:   640px;    /* Narrow: article, blog post, narrow form  */
+  --container-md:   768px;    /* Medium: content pages                    */
+  --container-lg:  1024px;    /* Wide: most site pages                    */
+  --container-xl:  1280px;    /* Extra wide: landing pages, dashboards    */
+  --container-2xl: 1440px;    /* Full: hero sections, marketing pages     */
+
+  /* --- Site Container Padding (horizontal gutter) --- */
+  --container-px-mobile: var(--space-4);   /* 16px on mobile              */
+  --container-px-tablet: var(--space-6);   /* 24px on tablet              */
+  --container-px-desktop: var(--space-8);  /* 32px on desktop             */
+
+  /* --- Grid --- */
+  --grid-columns:       12;
+  --grid-gutter:        var(--space-6);    /* Gap between columns         */
+
+  /* --- Header / Nav --- */
+  --header-height-mobile:  3.5rem;    /*  56px */
+  --header-height-desktop: 4rem;      /*  64px */
+
+  /* --- Sidebar (future dashboard use) --- */
+  --sidebar-width:     16rem;    /* 256px */
+  --sidebar-collapsed: 4rem;     /*  64px */
+
+  /* --- Content max-width for optimal reading (≈ 75 characters) --- */
+  --prose-max-width: 68ch;
+
+  /* --- Code editor panel heights --- */
+  --editor-height-sm: 200px;
+  --editor-height-md: 320px;
+  --editor-height-lg: 480px;
+
+
+  /* ==========================================================================
+     11. COMPONENT TOKENS
+     --------------------------------------------------------------------------
+     Pre-composed values for specific components. These build on the
+     primitives above to keep component files clean and minimal.
+     ========================================================================== */
+
+  /* --- Code Editor --- */
+  --editor-bg:              var(--primitive-slate-950);
+  --editor-gutter-bg:       var(--primitive-slate-900);
+  --editor-text:            var(--primitive-slate-100);
+  --editor-line-highlight:  rgba(255, 255, 255, 0.04);
+  --editor-cursor:          var(--primitive-cyan-400);
+  --editor-selection-bg:    rgba(37, 99, 235, 0.25);
+  --editor-font-size:       var(--text-sm);
+  --editor-line-height:     var(--leading-loose);
+
+  /* --- Quiz --- */
+  --quiz-option-bg:         var(--primitive-slate-0);
+  --quiz-option-bg-hover:   var(--primitive-blue-50);
+  --quiz-option-bg-correct: var(--primitive-emerald-50);
+  --quiz-option-bg-wrong:   var(--primitive-red-50);
+  --quiz-option-border:     var(--primitive-slate-200);
+  --quiz-option-border-correct: var(--primitive-emerald-500);
+  --quiz-option-border-wrong:   var(--primitive-red-500);
+  --quiz-progress-bg:       var(--primitive-slate-200);
+  --quiz-progress-fill:     var(--primitive-blue-600);
+
+  /* --- Progress / XP Bar --- */
+  --progress-track-bg:      var(--primitive-slate-200);
+  --progress-fill-bg:
+    linear-gradient(90deg, var(--primitive-blue-500), var(--primitive-violet-500));
+  --progress-height:        0.5rem;    /* 8px */
+  --progress-radius:        var(--radius-full);
+
+  /* --- Cards --- */
+  --card-bg:                var(--primitive-slate-0);
+  --card-bg-hover:          var(--primitive-slate-50);
+  --card-border:            var(--primitive-slate-200);
+  --card-shadow:            var(--shadow-sm);
+  --card-shadow-hover:      var(--shadow-card-hover);
+  --card-radius:            var(--radius-lg);
+
+  /* --- Navigation --- */
+  --nav-link-color:         var(--primitive-slate-600);
+  --nav-link-hover:         var(--primitive-slate-900);
+  --nav-link-active:        var(--primitive-blue-600);
+  --nav-indicator-color:    var(--primitive-blue-600);
+
+  /* --- Badge / Tag --- */
+  --badge-radius:           var(--radius-full);
+  --badge-font-size:        var(--text-xs);
+  --badge-font-weight:      var(--font-semibold);
+  --badge-padding:          0.2em 0.65em;
+
+  /* --- Difficulty Indicators (used on tutorial/project cards) --- */
+  --difficulty-beginner-bg:    var(--primitive-emerald-100);
+  --difficulty-beginner-text:  var(--primitive-emerald-800);
+  --difficulty-intermediate-bg:  var(--primitive-amber-100);
+  --difficulty-intermediate-text: var(--primitive-amber-800);
+  --difficulty-advanced-bg:    var(--primitive-red-100);
+  --difficulty-advanced-text:  var(--primitive-red-800);
+
+
+  /* ==========================================================================
+     12. DARK MODE — automatic via prefers-color-scheme
+     --------------------------------------------------------------------------
+     Semantic tokens are redefined here. Because components reference
+     semantic tokens (e.g. var(--color-bg-base)) and NOT primitives, they
+     automatically adopt the dark palette when the OS switches.
+
+     No JavaScript is required. No class toggling. Pure CSS.
+     ========================================================================== */
+
+} /* end :root */
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+
+    /* --- Backgrounds --- */
+    --color-bg-base:        var(--primitive-slate-950);
+    --color-bg-subtle:      var(--primitive-slate-900);
+    --color-bg-muted:       var(--primitive-slate-800);
+    --color-bg-emphasis:    var(--primitive-slate-700);
+    --color-bg-inverse:     var(--primitive-slate-0);
+    --color-bg-overlay:     rgba(2, 6, 23, 0.75);
+
+    /* --- Text --- */
+    --color-text-primary:   var(--primitive-slate-50);
+    --color-text-secondary: var(--primitive-slate-400);
+    --color-text-muted:     var(--primitive-slate-500);
+    --color-text-disabled:  var(--primitive-slate-700);
+    --color-text-inverse:   var(--primitive-slate-900);
+    --color-text-link:      var(--primitive-blue-400);
+    --color-text-link-hover: var(--primitive-blue-300);
+
+    /* --- Borders --- */
+    --color-border-subtle:   var(--primitive-slate-800);
+    --color-border-default:  var(--primitive-slate-700);
+    --color-border-emphasis: var(--primitive-slate-600);
+
+    /* --- Primary --- */
+    --color-primary:         var(--primitive-blue-500);
+    --color-primary-hover:   var(--primitive-blue-400);
+    --color-primary-subtle:  var(--primitive-blue-900);
+    --color-primary-border:  var(--primitive-blue-700);
+
+    /* --- Accent --- */
+    --color-accent:          var(--primitive-violet-500);
+    --color-accent-hover:    var(--primitive-violet-400);
+    --color-accent-subtle:   var(--primitive-violet-900);
+    --color-accent-border:   var(--primitive-violet-700);
+
+    /* --- Status --- */
+    --color-success:         var(--primitive-emerald-400);
+    --color-success-subtle:  var(--primitive-emerald-900);
+    --color-success-border:  var(--primitive-emerald-700);
+    --color-success-text:    var(--primitive-emerald-300);
+
+    --color-warning:         var(--primitive-amber-400);
+    --color-warning-subtle:  var(--primitive-amber-900);
+    --color-warning-border:  var(--primitive-amber-700);
+    --color-warning-text:    var(--primitive-amber-300);
+
+    --color-danger:          var(--primitive-red-400);
+    --color-danger-subtle:   var(--primitive-red-900);
+    --color-danger-border:   var(--primitive-red-700);
+    --color-danger-text:     var(--primitive-red-300);
+
+    /* --- Shadows (reduced opacity, dark bg needs less shadow) --- */
+    --shadow-xs:
+      0 1px 2px 0 rgba(2, 6, 23, 0.40);
+
+    --shadow-sm:
+      0 1px 3px 0 rgba(2, 6, 23, 0.50),
+      0 1px 2px -1px rgba(2, 6, 23, 0.50);
+
+    --shadow-md:
+      0 4px 6px -1px rgba(2, 6, 23, 0.50),
+      0 2px 4px -2px rgba(2, 6, 23, 0.50);
+
+    --shadow-lg:
+      0 10px 15px -3px rgba(2, 6, 23, 0.50),
+      0 4px 6px -4px rgba(2, 6, 23, 0.50);
+
+    --shadow-xl:
+      0 20px 25px -5px rgba(2, 6, 23, 0.55),
+      0 8px 10px -6px rgba(2, 6, 23, 0.55);
+
+    --shadow-focus:
+      0 0 0 3px rgba(59, 130, 246, 0.45);
+
+    /* --- Component Tokens (dark overrides) --- */
+    --card-bg:               var(--primitive-slate-900);
+    --card-bg-hover:         var(--primitive-slate-800);
+    --card-border:           var(--primitive-slate-700);
+
+    --quiz-option-bg:        var(--primitive-slate-800);
+    --quiz-option-bg-hover:  var(--primitive-slate-700);
+    --quiz-option-border:    var(--primitive-slate-600);
+
+    --nav-link-color:        var(--primitive-slate-400);
+    --nav-link-hover:        var(--primitive-slate-100);
+
+    --progress-track-bg:     var(--primitive-slate-700);
+
+    --difficulty-beginner-bg:   var(--primitive-emerald-900);
+    --difficulty-beginner-text: var(--primitive-emerald-300);
+    --difficulty-intermediate-bg:   var(--primitive-amber-900);
+    --difficulty-intermediate-text: var(--primitive-amber-300);
+    --difficulty-advanced-bg:   var(--primitive-red-900);
+    --difficulty-advanced-text: var(--primitive-red-300);
+  }
+}
