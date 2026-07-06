@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>Python for AI</title>
+
+  <meta
+    name="description"
+    content="Learn Python for AI, machine learning, and data science through hands-on tutorials, interactive quizzes, real-world projects, and an in-browser Python playground."
+  >
+
+  <meta name="theme-color" content="#2563EB" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="./styles/design-system/reset.css">
+  <link rel="stylesheet" href="./styles/design-system/variables.css">
+  <link rel="stylesheet" href="./styles/design-system/typography.css">
+  <link rel="stylesheet" href="./styles/design-system/utilities.css">
+  <link rel="stylesheet" href="./styles/main.css">
+</head>
+
+<body>
+
+  <!-- Skip to Content -->
+  <a id="skip-to-main" class="skip-link" href="#app-outlet">
+    Skip to content
+  </a>
+
+  <!-- Screen Reader Announcements -->
+  <div
+    id="router-announce"
+    class="sr-only"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+    aria-relevant="additions text">
+  </div>
+
+  <!-- No JavaScript -->
+  <noscript>
+    <div class="noscript-banner" role="alert">
+      <p>
+        Python for AI requires JavaScript to run.
+        Please enable JavaScript and reload the page.
+      </p>
+    </div>
+  </noscript>
+
+  <!-- Application Loading -->
+  <div
+    id="app-loading-overlay"
+    class="app-loading-overlay"
+    role="status"
+    aria-live="polite"
+    aria-label="Loading Python for AI">
+
+    <div class="app-loading-overlay__inner">
+      <span class="app-loading-overlay__spinner" aria-hidden="true"></span>
+      <span class="app-loading-overlay__text">
+        Loading Python for AI...
+      </span>
+    </div>
+
+  </div>
+
+  <!-- Global Header -->
+  <header id="page-header"></header>
+
+  <!-- Application Mount Point -->
+  <main
+    id="app-outlet"
+    role="main"
+    tabindex="-1">
+  </main>
+
+  <!-- Global Footer -->
+  <footer id="site-footer"></footer>
+
+  <!-- Back to Top -->
+  <button
+    id="back-to-top"
+    class="back-to-top"
+    type="button"
+    aria-label="Back to top"
+    hidden>
+    <span aria-hidden="true">↑</span>
+  </button>
+
+  <!-- Toast Notifications -->
+  <div
+    id="toast-container"
+    class="toast-container"
+    role="status"
+    aria-live="polite"
+    aria-atomic="false">
+  </div>
+
+  <!-- Modal Container -->
+  <div id="modal-root"></div>
+
+  <!-- Application Entry Point -->
+  <script type="module" src="./scripts/main.js"></script>
+
+</body>
+</html>
