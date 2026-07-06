@@ -26,7 +26,7 @@
  *  10. Global Error Handler — window 'error' / 'unhandledrejection' listeners
  *
  * PAGE MODULE INTEGRATION:
- *   Every page module (home.js, dashboard.js, tutorials.js, lesson-player.js,
+ *   Every page module (home.js, dashboard.js, tutorials.js, tutorial-detail.js,
  *   quizzes.js, projects.js, project-detail.js, playground.js) exposes a
  *   `static mount(outlet, ctx)` / `static unmount(outlet)` pair on its default
  *   export class. router.js's component loader contract expects a resolved
@@ -36,7 +36,7 @@
  *   without requiring any change to the already-built page modules.
  *
  * quiz.js AND code-editor.js ARE NOT STATICALLY IMPORTED HERE:
- *   Every page that needs them (lesson-player.js, quizzes.js, playground.js,
+ *   Every page that needs them (tutorial-detail.js, quizzes.js, playground.js,
  *   project-detail.js) already dynamically imports them internally only when
  *   an interactive editor or quiz is actually mounted. Statically importing
  *   either module in this entry point would defeat that lazy-loading
@@ -49,9 +49,9 @@
  *   /                     → pages/home.js
  *   /dashboard            → pages/dashboard.js
  *   /tutorials            → pages/tutorials.js
- *   /tutorials/:lessonId  → pages/lesson-player.js
+ *   /tutorials/:lessonId  → pages/tutorial-detail.js
  *     (this is the interactive lesson content page; the platform has no
- *      separate "tutorial-detail.js" file — lesson-player.js fulfils that
+ *      separate "tutorial-detail.js" file — tutorial-detail.js fulfils that
  *      role and is registered under this route)
  *   /quizzes              → pages/quizzes.js
  *   /projects             → pages/projects.js
@@ -533,7 +533,7 @@ export class Application {
         path:      '/tutorials/:lessonId',
         title:     (ctx) => `Lesson — ${ctx.params.lessonId}`,
         meta:      meta(),
-        component: wrapPage(() => import('./pages/lesson-player.js')),
+        component: wrapPage(() => import('./pages/tutorial-detail.js')),
       },
       {
         path:      '/quizzes',
