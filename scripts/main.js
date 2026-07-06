@@ -346,6 +346,7 @@ export class Application {
         outletId:        this.#config.outletId,
         titleSuffix:     ` | Python for AI`,
         scrollRestoration: true,
+        base: '/python-for-ai',
       });
       this.#registerRoutes();
     } catch (err) {
