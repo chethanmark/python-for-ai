@@ -175,24 +175,24 @@ const FOOTER_COLUMNS = [
     id:      'learn',
     heading: 'Learn',
     links: [
-      { label: 'Tutorials',  href: '/pages/tutorials.html'  },
-      { label: 'Projects',   href: '/pages/projects.html'   },
-      { label: 'Quizzes',    href: '/pages/quizzes.html'    },
-      { label: 'Dashboard',  href: '/pages/dashboard.html'  },
+      { label: 'Tutorials',  href: '/tutorials'  },
+      { label: 'Projects',   href: '/projects'   },
+      { label: 'Quizzes',    href: '/quizzes'    },
+      { label: 'Dashboard',  href: '/dashboard'   },
       { label: 'Roadmap',    href: '#roadmap',              badge: 'Soon' },
     ],
   },
-  {
-    id:      'topics',
+ {
+    id: 'topics',
     heading: 'Topics',
     links: [
-      { label: 'Python Basics',      href: '/pages/tutorials.html#basics'   },
-      { label: 'Data Science',       href: '/pages/tutorials.html#datascience' },
-      { label: 'Machine Learning',   href: '/pages/tutorials.html#ml'       },
-      { label: 'Deep Learning',      href: '/pages/tutorials.html#dl'       },
-      { label: 'AI Agents',          href: '/pages/tutorials.html#agents',  badge: 'New' },
-    ],
-  },
+      { label: 'Python Basics',    href: '/tutorials#basics' },
+      { label: 'Data Science',     href: '/tutorials#datascience' },
+      { label: 'Machine Learning', href: '/tutorials#ml' },
+      { label: 'Deep Learning',    href: '/tutorials#dl' },
+      { label: 'AI Agents',        href: '/tutorials#agents', badge: 'New' },
+    ]
+},
   {
     id:      'resources',
     heading: 'Resources',

@@ -128,11 +128,11 @@ export const NAV_EVENTS = {
  * This fallback ensures the nav renders on direct file:// access during dev.
  */
 const FALLBACK_NAV_ITEMS = [
-  { id: 'home',      label: 'Home',       href: '/',                  icon: 'home'    },
-  { id: 'tutorials', label: 'Tutorials',  href: '/pages/tutorials.html', icon: 'book' },
-  { id: 'projects',  label: 'Projects',   href: '/pages/projects.html',  icon: 'code' },
-  { id: 'quizzes',   label: 'Quizzes',    href: '/pages/quizzes.html',   icon: 'quiz' },
-  { id: 'dashboard', label: 'Dashboard',  href: '/pages/dashboard.html', icon: 'chart'},
+  { id: 'home',       label: 'Home',       href: '/',           icon: 'home' },
+  { id: 'tutorials',  label: 'Tutorials',  href: '/tutorials',  icon: 'book' },
+  { id: 'projects',   label: 'Projects',   href: '/projects',   icon: 'code' },
+  { id: 'quizzes',    label: 'Quizzes',    href: '/quizzes',    icon: 'quiz' },
+  { id: 'dashboard',  label: 'Dashboard',  href: '/dashboard',  icon: 'chart' },
 ];
 
 // ---------------------------------------------------------------------------

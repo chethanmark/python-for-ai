@@ -1570,7 +1570,7 @@ export default class Router {
         <p>The page you're looking for doesn't exist or has been moved.</p>
         <nav aria-label="Recovery links">
           <a href="/" data-router-ignore>Go home</a>
-          <a href="/pages/tutorials.html">Browse tutorials</a>
+          <a href="/tutorials">Browse tutorials</a>
         </nav>
       </div>
     `;

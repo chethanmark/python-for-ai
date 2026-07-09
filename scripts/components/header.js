@@ -74,8 +74,8 @@
  *     headline:    'Learn Python for AI',
  *     subheadline: 'Hands-on tutorials, coding challenges, and real AI projects.',
  *     ctas: [
- *       { id: 'start', label: 'Start Learning', href: '/pages/tutorials.html', primary: true },
- *       { id: 'demo',  label: 'See Projects',   href: '/pages/projects.html' },
+ *       { id: 'start', label: 'Start Learning', href: '/tutorials', primary: true },
+ *       { id: 'demo',  label: 'See Projects',   href: '/tutorials' },
  *     ],
  *     variant:    'gradient',
  *     particles:  true,
