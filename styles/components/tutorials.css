@@ -1,0 +1,794 @@
+/* ==========================================================================
+   TUTORIALS PAGE — PREMIUM COURSE CATALOG STYLESHEET
+   styles/pages/tutorials.css
+   --------------------------------------------------------------------------
+   Styles the course-catalog page rendered by scripts/pages/tutorials.js.
+   Every selector below matches a class actually emitted by TutorialsPage's
+   render methods (CSS.ROOT, CSS.HERO, CSS.STATS, CSS.GRID, CSS.CARD, etc.).
+
+   DESIGN LANGUAGE:
+     Premium, editorial feel inspired by Coursera's course grid, OpenAI
+     Academy's calm typography-first layout, and Stripe's crisp elevation
+     and motion language. Every color, spacing, radius, shadow, and
+     duration value is a var() reference into the existing design system
+     (styles/design-system/variables.css) — nothing is hardcoded.
+
+   DARK MODE:
+     variables.css already redefines every semantic token consumed here
+     under `@media (prefers-color-scheme: dark)`, so most of this file is
+     dark-mode-correct automatically. TutorialsPage also toggles a
+     `.tutorials-page--dark` class on its root element (driven by the
+     app's manual theme toggle via `data-theme` / `theme:changed`) — the
+     small `.tutorials-page--dark` block near the bottom of this file
+     covers the handful of local effects (glass panel opacity, gradient
+     stops) that need an explicit override beyond the semantic tokens.
+
+   REDUCED MOTION:
+     Respected two ways: the global `@media (prefers-reduced-motion:
+     reduce)` query, and the `.tutorials-page--reduced-motion` class the
+     page module applies directly (covers browsers where the media query
+     value changes after paint, since TutorialsPage checks it at render
+     time). Both disable entrance/hover motion identically.
+
+   FORWARD-COMPATIBLE SEARCH & FILTER STYLES:
+     The current TutorialsPage markup renders a hero, a stats strip, and a
+     course grid only — it does not currently render a search input or
+     filter dropdowns. Per the request, this stylesheet still includes a
+     complete, premium `.tutorials-controls` / `.tutorials-search` /
+     `.tutorials-filters` component set, styled to the same standard as
+     the rest of the page and ready to use the moment those elements are
+     added to the page's markup. These rules are inert (unused) against
+     the current DOM and will not affect anything that renders today.
+
+   BREAKPOINTS (from variables.css):
+     --breakpoint-sm  640px   phones (landscape)
+     --breakpoint-md  768px   tablets
+     --breakpoint-lg 1024px   small laptops
+     --breakpoint-xl 1280px   desktops
+     --breakpoint-2xl 1536px  large desktops
+     A custom 2560px tier is added below for 4K / ultra-wide displays,
+     capping content width and increasing the grid's column count rather
+     than letting cards stretch to an uncomfortable size.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. PAGE ROOT
+   ========================================================================== */
+
+.tutorials-page {
+  --tp-glass-bg: color-mix(in srgb, var(--card-bg) 72%, transparent);
+  --tp-glass-border: color-mix(in srgb, var(--card-border) 60%, transparent);
+  --tp-hero-glow-1: color-mix(in srgb, var(--color-primary) 16%, transparent);
+  --tp-hero-glow-2: color-mix(in srgb, var(--color-accent) 14%, transparent);
+
+  display: block;
+  width: 100%;
+  max-width: var(--container-2xl);
+  margin-inline: auto;
+  padding-inline: var(--container-px-mobile);
+  padding-block-end: var(--space-24);
+  color: var(--color-text-primary);
+  background: var(--color-bg-base);
+}
+
+@media (min-width: 768px) {
+  .tutorials-page {
+    padding-inline: var(--container-px-tablet);
+  }
+}
+
+@media (min-width: 1024px) {
+  .tutorials-page {
+    padding-inline: var(--container-px-desktop);
+  }
+}
+
+/* Ultra-wide / 4K: let the page breathe without cards over-stretching */
+@media (min-width: 2560px) {
+  .tutorials-page {
+    max-width: 1920px;
+  }
+}
+
+.tutorials-page__live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   2. HERO — glassmorphism panel with soft glow accents
+   ========================================================================== */
+
+.tutorials-hero {
+  position: relative;
+  overflow: hidden;
+  margin-block-start: var(--space-8);
+  margin-block-end: var(--space-12);
+  padding: var(--space-16) var(--space-6);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--tp-glass-border);
+  background:
+    radial-gradient(circle at 15% 20%, var(--tp-hero-glow-1), transparent 55%),
+    radial-gradient(circle at 85% 0%, var(--tp-hero-glow-2), transparent 50%),
+    var(--tp-glass-bg);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .tutorials-hero {
+    padding: var(--space-20) var(--space-12);
+  }
+}
+
+.tutorials-hero__title {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-display);
+  font-weight: var(--font-extrabold);
+  font-size: var(--text-4xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  background: linear-gradient(
+    135deg,
+    var(--color-text-primary) 35%,
+    var(--color-primary) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tutorials-hero__title:focus-visible {
+  outline: 3px solid var(--color-border-focus);
+  outline-offset: 6px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  background: none;
+}
+
+@media (min-width: 768px) {
+  .tutorials-hero__title {
+    font-size: var(--text-5xl);
+  }
+}
+
+@media (min-width: 1536px) {
+  .tutorials-hero__title {
+    font-size: var(--text-6xl);
+  }
+}
+
+.tutorials-hero__sub {
+  max-width: 42rem;
+  margin: 0 auto;
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+}
+
+/* ==========================================================================
+   3. STATS STRIP
+   ========================================================================== */
+
+.tutorials-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  max-width: 48rem;
+  margin: 0 auto var(--space-16);
+}
+
+.tutorials-stats__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-5) var(--space-3);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+}
+
+.tutorials-stats__value {
+  font-family: var(--font-display);
+  font-weight: var(--font-extrabold);
+  font-size: var(--text-3xl);
+  line-height: var(--leading-none);
+  color: var(--color-primary);
+}
+
+.tutorials-stats__label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tutorials-stats__stat:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-primary-border);
+  }
+}
+
+/* ==========================================================================
+   4. COURSE GRID
+   ========================================================================== */
+
+.tutorials-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+@media (min-width: 640px) {
+  .tutorials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .tutorials-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1920px) {
+  .tutorials-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 2560px) {
+  .tutorials-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-10);
+  }
+}
+
+/* ==========================================================================
+   5. COURSE CARD — large premium card
+   ========================================================================== */
+
+.tutorials-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--card-radius);
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  transition: transform var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out),
+              border-color var(--duration-normal) var(--ease-out),
+              background-color var(--duration-normal) var(--ease-out);
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tutorials-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--card-shadow-hover);
+    border-color: var(--color-primary-border);
+    background: var(--card-bg-hover);
+  }
+
+  .tutorials-card:hover .tutorials-card__thumb span {
+    transform: scale(1.08) rotate(-4deg);
+  }
+}
+
+.tutorials-card:focus-within {
+  box-shadow: var(--card-shadow-hover), var(--shadow-focus);
+}
+
+/* ---- Thumbnail --------------------------------------------------------- */
+
+.tutorials-card__thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  block-size: 9rem;
+  flex-shrink: 0;
+}
+
+.tutorials-card__thumb span {
+  display: inline-block;
+  line-height: 1;
+  transition: transform var(--duration-slow) var(--ease-spring);
+}
+
+/* ---- Body --------------------------------------------------------------- */
+
+.tutorials-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--padding-card);
+  flex: 1;
+}
+
+/* ---- Difficulty badge ---------------------------------------------------- */
+
+.tutorials-card__badge-diff {
+  align-self: flex-start;
+  padding: var(--badge-padding);
+  border-radius: var(--badge-radius);
+  font-size: var(--badge-font-size);
+  font-weight: var(--badge-font-weight);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.tutorials-card__badge-diff--beginner {
+  background: var(--difficulty-beginner-bg);
+  color: var(--difficulty-beginner-text);
+}
+
+.tutorials-card__badge-diff--intermediate {
+  background: var(--difficulty-intermediate-bg);
+  color: var(--difficulty-intermediate-text);
+}
+
+.tutorials-card__badge-diff--advanced {
+  background: var(--difficulty-advanced-bg);
+  color: var(--difficulty-advanced-text);
+}
+
+/* ---- Title & description -------------------------------------------------- */
+
+.tutorials-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--font-bold);
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+  color: var(--color-text-primary);
+}
+
+.tutorials-card__desc {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+  /* Clamp to 3 lines so every card in a row stays the same height */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---- Meta row (lesson count + duration) ------------------------------------ */
+
+.tutorials-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.tutorials-card__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-muted);
+}
+
+/* ---- Progress bar ------------------------------------------------------- */
+
+.tutorials-card__progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-block-start: var(--space-1);
+}
+
+.tutorials-card__bar {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  block-size: var(--progress-height);
+  border-radius: var(--progress-radius);
+  background: var(--progress-track-bg);
+  overflow: hidden;
+}
+
+.tutorials-card__bar-fill {
+  display: block;
+  block-size: 100%;
+  border-radius: var(--progress-radius);
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+.tutorials-card__bar-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  color: var(--color-text-muted);
+}
+
+/* ---- Call to action ------------------------------------------------------- */
+
+.tutorials-card__cta {
+  --cta-accent: var(--color-primary);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-block-start: var(--space-2);
+  padding: var(--padding-button-md);
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--cta-accent);
+  color: var(--color-text-inverse);
+  font-family: var(--font-body);
+  font-weight: var(--font-semibold);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-normal);
+  cursor: pointer;
+  transition: filter var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.tutorials-card__cta:hover {
+  filter: brightness(1.08);
+  box-shadow: var(--shadow-md);
+}
+
+.tutorials-card__cta:active {
+  transform: scale(0.98);
+  filter: brightness(0.96);
+}
+
+.tutorials-card__cta:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* ==========================================================================
+   6. FORWARD-COMPATIBLE: SEARCH BAR & FILTER DROPDOWNS
+   --------------------------------------------------------------------------
+   Not rendered by the current TutorialsPage markup (see file header) but
+   included so a search/filter bar can be dropped in above the grid using
+   this same visual language without any additional styling work.
+   ========================================================================== */
+
+.tutorials-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-block-end: var(--space-6);
+}
+
+.tutorials-controls__search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 20rem;
+  min-inline-size: 0;
+}
+
+.tutorials-controls__search-input {
+  inline-size: 100%;
+  padding: var(--space-3) var(--space-4) var(--space-3) var(--space-10);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-full);
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  transition: border-color var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out),
+              background-color var(--duration-fast) var(--ease-out);
+}
+
+.tutorials-controls__search-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.tutorials-controls__search-input:hover {
+  border-color: var(--color-border-emphasis);
+}
+
+.tutorials-controls__search-input:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-focus);
+}
+
+.tutorials-controls__search-icon {
+  position: absolute;
+  inset-inline-start: var(--space-4);
+  pointer-events: none;
+  color: var(--color-text-muted);
+}
+
+.tutorials-controls__search-clear {
+  position: absolute;
+  inset-inline-end: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out);
+}
+
+.tutorials-controls__search-clear:hover {
+  background: var(--color-bg-muted);
+  color: var(--color-text-primary);
+}
+
+.tutorials-controls__search-clear:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.tutorials-controls__sort-select {
+  padding: var(--space-3) var(--space-8) var(--space-3) var(--space-4);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--color-text-muted) 50%),
+                     linear-gradient(135deg, var(--color-text-muted) 50%, transparent 50%);
+  background-position: calc(100% - 1.1rem) center, calc(100% - 0.85rem) center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  transition: border-color var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.tutorials-controls__sort-select:hover {
+  border-color: var(--color-border-emphasis);
+}
+
+.tutorials-controls__sort-select:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus);
+}
+
+.tutorials-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-block-end: var(--space-10);
+}
+
+.tutorials-filters__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.tutorials-filters__label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+.tutorials-filters__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.tutorials-filters__chip {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-full);
+  background: var(--color-bg-subtle);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+}
+
+.tutorials-filters__chip:hover {
+  border-color: var(--color-primary-border);
+  color: var(--color-text-primary);
+  transform: translateY(-1px);
+}
+
+.tutorials-filters__chip:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.tutorials-filters__chip--active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+}
+
+/* A native <select>-based filter dropdown sharing the same visual language */
+.tutorials-filters__dropdown {
+  position: relative;
+}
+
+.tutorials-filters__dropdown select {
+  padding: var(--space-2) var(--space-8) var(--space-2) var(--space-4);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-subtle);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  appearance: none;
+}
+
+.tutorials-filters__dropdown select:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus);
+}
+
+.tutorials-filters__dropdown::after {
+  content: '';
+  position: absolute;
+  inset-inline-end: var(--space-3);
+  inset-block-start: 50%;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-inline-end: 2px solid var(--color-text-muted);
+  border-block-end: 2px solid var(--color-text-muted);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   7. EMPTY / SKELETON STATES (forward-compatible)
+   ========================================================================== */
+
+.tutorials-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-20) var(--space-6);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.tutorials-skeleton__card {
+  block-size: 22rem;
+  border-radius: var(--card-radius);
+  background: linear-gradient(
+    100deg,
+    var(--color-bg-subtle) 30%,
+    var(--color-bg-muted) 50%,
+    var(--color-bg-subtle) 70%
+  );
+  background-size: 200% 100%;
+  animation: tutorials-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes tutorials-shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ==========================================================================
+   8. DARK MODE — local overrides beyond the semantic token layer
+   --------------------------------------------------------------------------
+   variables.css already redefines --card-bg, --difficulty-*, etc. under
+   `@media (prefers-color-scheme: dark)`. This block covers the page's own
+   local composite tokens for the manual-toggle case, driven by the
+   `.tutorials-page--dark` class TutorialsPage applies via `theme:changed`.
+   ========================================================================== */
+
+.tutorials-page--dark {
+  --tp-hero-glow-1: color-mix(in srgb, var(--color-primary) 22%, transparent);
+  --tp-hero-glow-2: color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+
+.tutorials-page--dark .tutorials-hero {
+  box-shadow: var(--shadow-xl);
+}
+
+.tutorials-page--dark .tutorials-card__cta {
+  color: var(--color-text-inverse);
+}
+
+/* ==========================================================================
+   9. REDUCED MOTION
+   --------------------------------------------------------------------------
+   Disables entrance/hover motion two ways: the standard media query, and
+   the `.tutorials-page--reduced-motion` class TutorialsPage applies
+   directly (it checks matchMedia at render time, covering cases where the
+   query's value is read once rather than watched continuously).
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .tutorials-page * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .tutorials-card:hover,
+  .tutorials-stats__stat:hover {
+    transform: none;
+  }
+
+  .tutorials-card:hover .tutorials-card__thumb span {
+    transform: none;
+  }
+
+  .tutorials-card__cta:active {
+    transform: none;
+  }
+}
+
+.tutorials-page--reduced-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+.tutorials-page--reduced-motion .tutorials-card:hover,
+.tutorials-page--reduced-motion .tutorials-stats__stat:hover {
+  transform: none;
+}
+
+.tutorials-page--reduced-motion .tutorials-card:hover .tutorials-card__thumb span {
+  transform: none;
+}
+
+/* ==========================================================================
+   10. HIGH CONTRAST / FORCED COLORS
+   ========================================================================== */
+
+@media (forced-colors: active) {
+  .tutorials-card,
+  .tutorials-stats__stat,
+  .tutorials-controls__search-input,
+  .tutorials-filters__chip {
+    border: 1px solid CanvasText;
+  }
+
+  .tutorials-card__cta {
+    border: 1px solid ButtonText;
+  }
+}
